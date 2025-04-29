@@ -570,6 +570,7 @@
                                             </td>
                                             @php
                                                 $end_date = strtotime( date('Y-m-d')); 
+                                                // $end_date = strtotime(Request::get('end_date')); 
                                                 if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
