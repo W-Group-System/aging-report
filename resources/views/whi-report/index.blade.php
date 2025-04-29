@@ -1003,7 +1003,7 @@ var end_date_param = '<?php echo Request::get("end_date"); ?>';
 var end_date;
 
 if (end_date_param !== '') {
-    end_date = Date.parse(end_date_param);
+    end_date =Date.now();
 } else {
     end_date = Date.now(); 
 }
@@ -1018,8 +1018,8 @@ function openModal(filterColumn) {
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         // var dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
-        // var datediff = Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
-        var datediff = dueDate ? Math.ceil((currentDateUTC - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
+        // var datediff = Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
+        var datediff = dueDate ? Math.floor((currentDateUTC - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
         var status = '';
 
         if ( !dueDate || datediff <= 0) {
@@ -1055,8 +1055,8 @@ function openModalByStatusAndCurrency(status, currency) {
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         // var dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
-        // var datediff = Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
-        var datediff = dueDate ? Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
+        // var datediff = Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
+        var datediff = dueDate ? Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
         var currentStatus = '';
 
         if (!dueDate || datediff <= 0) {
@@ -1090,8 +1090,8 @@ function openModalByStatusAndCurrencyAndType(status, currency, type) {
 
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
-        var datediff = dueDate ? Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
-        // var datediff = Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
+        var datediff = dueDate ? Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
+        // var datediff = Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
         
         var currentStatus = '';
 
@@ -1258,8 +1258,8 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
     var currentDateUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
     // var dueDateUTC = Date.UTC(your_date.getFullYear(), your_date.getMonth(), your_date.getDate());
     var dueDateUTC = your_date ? Date.UTC(your_date.getFullYear(), your_date.getMonth(), your_date.getDate()) : null;
-    // var daysDifference = Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
-    var daysDifference = dueDateUTC ? Math.ceil((end_date - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
+    // var daysDifference = Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24));
+    var daysDifference = dueDateUTC ? Math.floor((end_date - dueDateUTC) / (1000 * 60 * 60 * 24)) : null;
     // var daysText = daysDifference + ' ' + (daysDifference === 1 ? 'day' : 'days');
     var daysText = daysDifference !== null ? daysDifference + ' ' + (daysDifference === 1 ? 'day' : 'days') : '0 days';
     item.days = parseFloat(daysText);
