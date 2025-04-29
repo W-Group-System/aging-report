@@ -569,7 +569,7 @@
                                                 @endif
                                             </td>
                                             @php
-                                                $end_date = strtotime(Request::get('end_date')); 
+                                                $end_date = strtotime( date('Y-m-d')); 
                                                 if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
@@ -581,6 +581,7 @@
                                                     $datediff = null; 
                                                 } 
                                             @endphp
+                                            
                                         <td>
                                             @if($datediff !== null)
                                                 {{ ceil($datediff / (60 * 60 * 24)) }} {{ ceil($datediff / (60 * 60 * 24)) == 1 ? 'day' : 'days' }}
