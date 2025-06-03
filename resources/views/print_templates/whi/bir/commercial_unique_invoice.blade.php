@@ -372,7 +372,7 @@
         <div class="info-row">
             <span class="info-label"></span>
             <span class="info-colon"></span>
-            <span class="info-value"></span>
+            <span class="info-value">{{ optional($details->first())->U_TaxID }}</span>
         </div>
     </div>
     <div class="right-column">

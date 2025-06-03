@@ -36,17 +36,21 @@
                     <label>Business Style</label>
                     <input name="BusinessStyle" class="form-control" type="text">
                 </div> --}}
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label>Buyer's PO No.</label>
                     <input name="BuyersPo" class="form-control" type="text" value="{{ collect($detail->PoNumbers)->pluck('U_BuyersPO')->unique()->implode(', ') ?: $detail->U_BuyersPO }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label>Buyer's Ref No.</label>
                     <input name="BuyersRef" class="form-control" type="text" value="{{ $detail->NumAtCard }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label>Sales Contract No.</label>
                     <input name="SalesContract" class="form-control" type="text" value="{{ $detail->U_Salescontract }}">
+                </div>
+                <div class="col-md-6">
+                    <label>TIN</label>
+                    <input name="Tin" class="form-control" type="text" value="{{ $detail->U_TaxID }}">
                 </div>
                 {{-- <div class="col-md-6">
                     <label>OSCA/PWD ID No.</label>
