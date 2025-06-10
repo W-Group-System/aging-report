@@ -615,28 +615,44 @@ function original_print(Request $request, $invoice_number){
         
         if (Route::currentRouteName() === 'bir_original_invoice') {
             $view = 'print_templates.whi.bir.commercial_invoice';
+        } elseif (Route::currentRouteName() === 'bir_original_new_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_unique_invoice') {
             $view = 'print_templates.whi.bir.commercial_unique_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_vatable_invoice') {
             $view = 'print_templates.whi.bir.commercial_vatable_invoice';
+        } elseif (Route::currentRouteName() === 'bir_original_vatable_new_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_vatable_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_unique_vatable_invoice') {
             $view = 'print_templates.whi.bir.commercial_unique_vatable_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_exempt_invoice') {
             $view = 'print_templates.whi.bir.commercial_exempt_invoice';
+        } elseif (Route::currentRouteName() === 'bir_original_exempt_new_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_exempt_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_unique_exempt_invoice') {
             $view = 'print_templates.whi.bir.commercial_unique_exempt_invoice';
         } else {
             $view = null; 
         }
 
-        $pdf = PDF::loadView($view, [
-            array(
-                'details' =>$details,
-                'PoNumber' => $PoNumbers,
-            ),
-            'prepared_by' => $prepared_by,
-        ])
-        ->setPaper([0, 0, 622, 792], 'portrait');
+        // $pdf = PDF::loadView($view, [
+        //     array(
+        //         'details' =>$details,
+        //         'PoNumber' => $PoNumbers,
+        //     ),
+        //     'prepared_by' => $prepared_by,
+        // ])
+        // ->setPaper([0, 0, 622, 792], 'portrait');
+        $pdf = PDF::loadView($view, ['details' => $details, 'PoNumber' => $PoNumbers]);
+        if (Route::currentRouteName() === 'bir_original_new_invoice') {
+            $pdf->setPaper('legal', 'portrait');
+        } elseif (Route::currentRouteName() === 'bir_original_vatable_new_invoice') {
+            $pdf->setPaper('legal', 'portrait');
+        } elseif (Route::currentRouteName() === 'bir_original_exempt_new_invoice') {
+            $pdf->setPaper('legal', 'portrait');
+        } else {
+            $pdf->setPaper([0, 0, 622, 792], 'portrait');
+        }
 
         return $pdf->stream('WHI_BIR_Commercial_Invoice.pdf');
     }
@@ -652,11 +668,17 @@ function edit_print(Request $request, $id){
 
         if (Route::currentRouteName() === 'whi_bir_edited_commercial_invoice') {
             $view = 'print_templates.whi.bir.commercial_invoice_edited';
+        } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_invoice_edited';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_commercial_vatable_invoice') {
             $view = 'print_templates.whi.bir.commercial_vatable_invoice_edited';
+        } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_vatable_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_vatable_invoice_edited';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_commercial_exempt_invoice') {
             $view = 'print_templates.whi.bir.commercial_exempt_invoice_edited';
-        }elseif (Route::currentRouteName() === 'ccc_bir_edited_invoice') {
+        } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_exempt_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_exempt_invoice_edited';
+        } elseif (Route::currentRouteName() === 'ccc_bir_edited_invoice') {
             $view = 'print_templates.ccc.bir.commercial_invoice_edited';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_invoice') {
             $view = 'print_templates.pbi.bir.commercial_invoice_edited';
@@ -677,12 +699,27 @@ function edit_print(Request $request, $id){
         $filename = Route::currentRouteName() === 'bir_edited_invoice_whi'
         ? 'WHI_BIR_Commercial_Invoice_New.pdf'
         : 'CCC_BIR_Commercial_Invoice_New.pdf';
-        $pdf = PDF::loadView($view, [
-            array(
-                'details' =>$details,
-            ),
-        ])
-        ->setPaper([0, 0, 622, 792], 'portrait');
+        // $pdf = PDF::loadView($view, [
+        //     array(
+        //         'details' =>$details,
+        //     ),
+        // ])
+        // ->setPaper([0, 0, 622, 792], 'portrait');
+
+        $pdf = PDF::loadView($view, ['details' => $details]);
+
+        $legalPortraitRoutes = [
+            'whi_bir_edited_new_commercial_invoice',
+            'whi_bir_edited_new_commercial_vatable_invoice',
+            'whi_bir_edited_new_commercial_exempt_invoice',
+        ];
+
+        if (in_array(Route::currentRouteName(), $legalPortraitRoutes)) {
+            $pdf->setPaper('legal', 'portrait');
+        } else {
+            $pdf->setPaper([0, 0, 622, 792], 'portrait');
+        }
+        
 
         return $pdf->stream($filename);
     }
