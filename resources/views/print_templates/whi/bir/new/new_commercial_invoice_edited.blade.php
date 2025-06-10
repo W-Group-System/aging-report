@@ -78,15 +78,18 @@
             display: table;
             clear: both;
         }
-        .left-column, .right-column {
+        .left-column, {
             float: left; 
-            width: 50%; 
+            width: 70%; 
             font-size: 13px;
             line-height: 1;
         }
         .right-column {
-            /* margin-top: 12px; */
-            margin-left: 73px; 
+            float: left; 
+            width: 30%; 
+            font-size: 13px;
+            line-height: 1;
+            /* margin-left: 73px;  */
         }
         .info-row {
             margin-bottom: 10px;
@@ -96,7 +99,7 @@
             vertical-align: top;   /* Ensure alignment between label and value */
         }
         .customer-container .left-column .info-label{
-            width: 20%; 
+            width: 13%; 
             display: inline-block;
             vertical-align: top;  
             margin: 0;
@@ -107,7 +110,7 @@
             margin-bottom: 10px
         }
         .customer-container .right-column .info-label{
-            width: 40%; 
+            width: 35%; 
             display: inline-block;
             vertical-align: top;  
             margin: 0;
@@ -419,6 +422,9 @@
         .footer-right {
             float: right; 
         }
+        .float-info {
+           margin-top:-18px;
+        }
     </style>
 </head>
 <body>
@@ -443,17 +449,22 @@
         <div class="info-row" style="margin-bottom: 15px">
             <span class="info-label"></span>
             <span class="info-colon"></span>
-            <span class="info-value"></strong></span>
-        </div>
-        <div class="info-row">
-            <span class="info-label"></span>
-            <span class="info-colon"></span>
-            <span class="info-value">{{ optional($details->first())->Address }}</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label"></span>
-            <span class="info-colon"></span>
             <span class="info-value">{{ optional($details->first())->Tin }}</span>
+        </div>
+        @php
+            $address = optional($details->first())->Address;
+            $wordCount = str_word_count($address);
+        @endphp
+
+        <div class="info-row {{ $wordCount > 20 ? 'float-info' : '' }}">
+            <span class="info-label"></span>
+            <span class="info-colon"></span>
+            <span class="info-value">{{ $address }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label"></span>
+            <span class="info-colon"></span>
+            <span class="info-value"></span>
         </div>
     </div>
     <div class="right-column">
@@ -493,8 +504,8 @@
     <table style="">
         <thead>
             <tr>
-                <th style="width: 44%; height: 16px;"></th>
-                <th style="width: 13%; "></th>
+                <th style="width: 42%; height: 16px;"></th>
+                <th style="width: 15%; "></th>
                 <th style="width: 14%"></th>
                 <th style="width: 20%"></th>
                 <th style="width: 14%;"></th>
