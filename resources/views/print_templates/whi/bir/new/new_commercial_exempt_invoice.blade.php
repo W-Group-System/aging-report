@@ -385,7 +385,7 @@
         }
 
         .left-box .new-col {
-            font-size: 13px;
+            font-size: 14px;
             align-items: center;
         }
         .left-align {
