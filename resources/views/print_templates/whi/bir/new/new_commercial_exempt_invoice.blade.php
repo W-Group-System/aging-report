@@ -314,7 +314,7 @@
             display: block; 
         }
         .terms .info-row {
-            line-height: 0.6;
+            line-height: 1;
         }
         .terms .info-detail {
             width: 55%;
@@ -399,7 +399,7 @@
             margin-top: -50px;
             float: right; 
             width: 50%; 
-            font-size: 12px;
+            font-size: 13px;
         }
         .signature-space {
             width: 200px; 
