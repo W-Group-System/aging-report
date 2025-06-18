@@ -736,7 +736,7 @@
         </span>
     </div>
     <div style="position: relative; ">
-        <span style="font-size:11px; position: fixed; left: 470px; bottom: 370px; width: 38%; ">
+        <span style="font-size:11px; position: fixed; left: 470px; bottom: 350px; width: 38%; ">
             <div class="terms">
                 <div class="info-row">
                     <span class="info-name">Terms of Payment</span>
