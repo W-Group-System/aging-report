@@ -7,7 +7,7 @@
     
     <style>
         @page{
-        margin: 70px 70px 10px 0px;
+        margin: 60px 40px 10px 50px;
        }
         body {
             font-family: sans-serif;
@@ -107,6 +107,8 @@
             vertical-align: top;  
         }
         .product-details {
+            margin-right: -20px;
+            margin-left: -40px;
             max-height: 300px;
             min-height: 300px;
         }
@@ -116,7 +118,7 @@
             font-size: 13px;
         }
         .product-details .top-table th{
-            height: 15px;
+            height: 25px;
             /* border: 1px solid #000;  */
             text-align: center;
             width: 100%;
@@ -192,6 +194,7 @@
         .right-column .info-row.multiline .info-value{
             /* margin-top: -20px; */
             line-height: 1;
+
         }
     </style>
 </head>
@@ -250,19 +253,19 @@
               </div>
           </div>
           <div class="right-column">
-              <div class="info-row">
+              <div class="info-row" style="margin-bottom:13px">
                   <span class="info-label"></span>
                   <span class="info-value">{{ \Carbon\Carbon::parse(optional($details->first())->invoice_date)->format('F j, Y') }}</span>
               </div>
-              <div class="info-row" style="margin-bottom:15px">
+              <div class="info-row" style="margin-bottom:13px">
                   <span class="info-label"></span>
                   <span class="info-value">{{ optional($details->first())->BuyersPo }}</span>
               </div>
-              <div class="info-row">
+              <div class="info-row" style="margin-bottom:13px">
                   <span class="info-label"></span>
                   <span class="info-value">{{ optional($details->first())->BuyersRef }}</span>
               </div>
-              <div class="info-row">
+              <div class="info-row" style="margin-bottom:10px">
                   <span class="info-label"></span>
                   <span class="info-value">
                     @if (optional($details->first())->InvoiceDueDate)
@@ -270,7 +273,7 @@
                     @else 
                     @endif
               </div>
-              <div class="info-row {{ strlen(optional($details->first())->TermsOfPayment) > 35 ? 'multiline' : '' }}" style="margin-bottom:10px">
+              <div class="info-row {{ strlen(optional($details->first())->TermsOfPayment) > 35 ? 'multiline' : '' }}" style="margin-bottom:12px">
                 <span class="info-label"></span>
                 <span class="info-value">{{ optional($details->first())->TermsOfPayment }}</span>
             </div>
@@ -287,20 +290,20 @@
                 <span class="info-value">{{ optional($details->first())->ContainerNo }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label"></span>
-                <span class="info-value">{{ optional($details->first())->SealNo }}</span>
-            </div>
+              <span class="info-label"></span>
+              <span class="info-value">{{ optional($details->first())->SealNo }}</span>
+          </div>
           </div>
       </div>
       <div class="product-details">
           <table class="top-table">
               <thead>
                   <tr>
-                    <th style="width: 103px;"></th>
-                    <th style="width: 289px;"></th>
-                    <th style="width: 100px;"></th>
-                    <th style="width: 77px;"></th>
-                    <th style="width:99px;"></th>
+                    <th style="width: 90px;"></th>
+                    <th style="width: 223px;"></th>
+                    <th style="width: 80px;"></th>
+                    <th style="width: 60px"></th>
+                    <th style="width:75px;"></th>
                   </tr>
               </thead>
               @php
@@ -308,65 +311,64 @@
               @endphp
               @foreach ($details as $detail)
               <tr>
-                <td style="width: 103px;"></td>
-                <td style="width: 289px;"></td>
-                <td style="width: 100px; text-transform: uppercase;">{{ $detail->Uom }}</td>
-                <td style="width: 77px;">{{ $detail->Currency }}</td>
-                <td style="width:99px;">{{ $detail->Currency }}</td>
+                <td style="width: 90px;"></td>
+                <td style="width: 223px;"></td>
+                <td style="width: 80px; text-transform: uppercase;">{{ $detail->Uom }}</td>
+                <td style="width: 60px">{{ $detail->Currency }}</td>
+                <td style="width:75px;">{{ $detail->Currency }}</td>
             </tr>
               <tbody>
                 @foreach ($detail->products as $product)
                 @php
                     $total += $product->Amount;
                 @endphp
-                   <tr style="line-height: 10px">
-                      <td style="width: 103px;">{{ $product->ProductCode }}</td>
-                      <td style="width: 289px; text-align:left; padding-left: 20px; box-sizing: border-box;">{{ $product->Description }}</td>
-                      <td style="width: 100px;">
+                  <tr style="line-height: 10px">
+                      <td style="width: 90px;">{{ $product->ProductCode }}</td>
+                      <td style="width: 223px; text-align:left; padding-left: 20px; box-sizing: border-box;">{{ $product->Description }}</td>
+                      <td style="width: 80px;">
                         {{ $product->Quantity !== null && $product->Quantity != 0 ? number_format($product->Quantity, 2) : '' }}
                     </td>
-                    <td style="width: 77px;">
+                    <td style="width: 60px;">
                         {{ $product->UnitPrice !== null && $product->UnitPrice != 0 ? number_format($product->UnitPrice, 2) : '' }}
                     </td>
-                    <td style="width: 99px; text-align: right;">
+                    <td style="width: 75px; text-align: right;">
                         {{ $product->Amount !== null && $product->Amount != 0 ? number_format($product->Amount, 2) : '' }}
                     </td>
                   </tr>
                   @endforeach
                   @endforeach
                   <tr>
-                    <td style="width: 103px;"></td>
-                    <td style="width: 289px; text-align:left; padding-left: 10px; box-sizing: border-box;"></td>
-                    <td style="width: 100px;"></td>
-                    <td style="width: 77px;"></td>
-                    <td style="width: 103px; padding:0;border-bottom: 1px double black; border-top:1 px solid black;text-align: right;">{{ number_format($total,2) }}</td>
+                    <td style="width: 90px;"></td>
+                    <td style="width: 223px; text-align:left; padding-left: 10px; box-sizing: border-box;"></td>
+                    <td style="width: 80px;"></td>
+                    <td style="width: 60px;"></td>
+                    <td style="width: 75px; padding:0;border-bottom: 1px double black; border-top:1 px solid black;text-align: right;">{{ number_format($total,2) }}</td>
                   </tr>
                   <tr>
                     <td></td>
-                    <td style="width: 289px; text-align:left;padding-left: 20px; box-sizing: border-box;">{!! nl2br(e(optional($details->first())->Remarks )) !!}</td>
+                    <td style="width: 223px; text-align:left;padding-left: 20px; box-sizing: border-box;">{!! nl2br(e(optional($details->first())->Remarks )) !!}</td>
                     <td></td>
                     <td></td>
                     <td ></td>
                  </tr>
                   {{-- @foreach ($detail->clientRequest as $clientreq)
                   <tr>
-                    <td style="width: 103px;">{{ $clientreq->ProductCode }}</td>
-                    <td style="width: 305px; text-align:left">{{ $clientreq->Description }}</td>
-                    <td style="width: 100px;"></td>
-                    <td style="width: 74px;"></td>
-                    <td style="width: 103px;;">{{ $clientreq->Amount == 0 || is_null($clientreq->Amount) ? '' : number_format($clientreq->Amount, 2) }}</td>
+                    <td style="width: 90px;">{{ $clientreq->ProductCode }}</td>
+                    <td style="width: 223px; text-align:left;padding-left: 10px; box-sizing: border-box;">{{ e($clientreq->Description) }}</td>
+                    <td style="width: 80px;"></td>
+                    <td style="width: 60px"></td>
+                    <td style="width:75px;">{{ $clientreq->Amount == 0 || is_null($clientreq->Amount) ? '' : number_format($clientreq->Amount, 2) }}</td>
                 </tr>
                   @endforeach --}}
               </tbody>
-              
           </table>
         </div>
           <div class="product-details-middle">
-            <table class="middle-table"  style="margin-top:0; border-top:none; font-size:12px;  width: 100%;">
+            <table class="middle-table"  style="margin-top:20px; border-top:none; font-size:12px;  width: 100%;">
                 <tbody >
                     <tr>
                         <td style="width: 53%;">
-                            <p style="margin-left:15px; text-align: justify;">
+                            <p style="margin-left:10px; text-align: justify;">
                                 @if (optional($details->first())->ShowPhrex == 1)
                                    {{ optional($details->first())->Phrex }}
                                 @endif
@@ -405,7 +407,7 @@
                                         <td class="label-column" style="height: 10px !important;"></td>
                                         <td class="value-column" style="height: 10px !important;"></td>
                                     </tr>
-                                    <tr >
+                                    <tr>
                                       <td></td>
                                       <td></td>
                                       <td class="label-column"></td>
@@ -429,7 +431,7 @@
                   @endphp --}}
                     <tr style="">
                         <td class="label-column"></td>
-                        <td class="value-column" style="font-size: 11px">@if($details->first() && $details->first()->U_T3)
+                        <td class="value-column" style="font-size: 11px;">@if($details->first() && $details->first()->U_T3)
                             <?php
                             // $intermediaryBankDetails = optional($details->first())->U_T2 . ' \ ' . optional($details->first())->U_T3 . ' \ ' . optional($details->first())->U_T4 . ' \ ' . optional($details->first())->U_T5 . ' \ ' . optional($details->first())->U_T6;
                             
@@ -464,17 +466,20 @@
                             //     {{ $line }}<br>
                             // @endforeach --}}
                         @endif
-                         {!! nl2br(e(optional($details->first())->PaymentInstruction)) !!}
                         </td>
-                        <td class="" style="padding-left: 53px; padding-top:35px;">
+                        <td class="" style="padding-left: 53px; padding-top:30px;">
                             {{ substr(auth()->user()->name, 0, 1) }}. {{ last(explode(' ', auth()->user()->name)) }} <br> <br>
                         </td>
                         <td class=""></td>
-                        <td style="padding-top:37px;">J. Galera</td>
+                        <td style="padding-top:35px;">J. Galera</td>
                         <td class=""></td>
                     </tr>
+                    <div class="payment-float" style="position: fixed; left: 80px; bottom: 40px; font-size: 10px; width: 300px;">
+                        {!! nl2br(e(optional($details->first())->PaymentInstruction)) !!}
+                    </div>
                 </tbody>
             </table>
         </div>
+</div>
 </body>
 </html>
