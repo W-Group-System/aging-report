@@ -394,8 +394,10 @@
                                             <td>{{$invoice->terms->PymntGroup}}</td>
                                             <td>@if($invoice->U_BaseDate != null){{date('m/d/Y', strtotime($invoice->U_BaseDate))}}@else NA @endif</td>
                                             <td>
-                                                @if(!empty($invoice->U_DueDateAR))
-                                                {{ date('m/d/Y', strtotime($invoice->U_DueDateAR)) }}
+                                                {{-- @if(!empty($invoice->U_DueDateAR))
+                                                {{ date('m/d/Y', strtotime($invoice->U_DueDateAR)) }} --}}
+                                                @if(!empty($invoice->DocDueDate))
+                                                {{ date('m/d/Y', strtotime($invoice->DocDueDate)) }}
                                                 @else
                                                 TBA
                                                 @endif
@@ -420,10 +422,10 @@
                                                     if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
-                                                    if (empty($invoice->U_DueDateAR)) {
+                                                    if (empty($invoice->DocDueDate)) {
                                                         $total_current_usd += $final_amount; 
                                                     } else {
-                                                        $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                         if ($dueDateTimestamp === false) {
                                                             $total_current_usd += $final_amount;
                                                         } else {
@@ -451,13 +453,13 @@
                                                     if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
-                                                    $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                    $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                     $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
 
-                                                    if (empty($invoice->U_DueDateAR)) {
+                                                    if (empty($invoice->DocDueDate)) {
                                                         $total_current_euro += $final_amount; 
                                                     } else {
-                                                        $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                         if ($dueDateTimestamp === false) {
                                                             $total_current_euro += $final_amount;
                                                         } else {
@@ -494,13 +496,13 @@
                                                             if (empty($end_date)) {
                                                                 $end_date = time(); 
                                                             }
-                                                            $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                            $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                             $daysLate = ($end_date - $dueDateTimestamp) / (60 * 60 * 24);
 
-                                                            if (empty($invoice->U_DueDateAR)) {
+                                                            if (empty($invoice->DocDueDate)) {
                                                             $total_current_php_t += $php_t_amount; 
                                                     } else {
-                                                        $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                         if ($dueDateTimestamp === false) {
                                                             $total_current_php_t += $php_t_amount;
                                                         } else {
@@ -536,13 +538,13 @@
                                                             if (empty($end_date)) {
                                                                 $end_date = time(); 
                                                             }
-                                                            $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                            $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                             $daysLate = ($end_date - $dueDateTimestamp) / (60 * 60 * 24);
 
-                                                            if (empty($invoice->U_DueDateAR)) {
+                                                            if (empty($invoice->DocDueDate)) {
                                                             $total_current_php_nt += $php_nt_amount; 
                                                     } else {
-                                                        $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                         if ($dueDateTimestamp === false) {
                                                             $total_current_php_nt += $php_nt_amount;
                                                         } else {
@@ -574,7 +576,7 @@
                                                 if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
-                                                    $due_date = !empty($invoice->U_DueDateAR) ? strtotime(date('m/d/Y', strtotime($invoice->U_DueDateAR))) : null;
+                                                    $due_date = !empty($invoice->DocDueDate) ? strtotime(date('m/d/Y', strtotime($invoice->DocDueDate))) : null;
     
                                                 if ($due_date !== null) {
                                                     $datediff = $end_date - $due_date;
@@ -1013,8 +1015,8 @@ function openModal(filterColumn) {
     console.log(filterColumn);
     var filteredData = invoicesData.filter(function (item) {
         var currentDate = new Date();
-        // var dueDate = new Date(item.U_DueDateAR);
-        var dueDate = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+        // var dueDate = new Date(item.DocDueDate);
+        var dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         // var dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
@@ -1049,8 +1051,8 @@ function openModalByStatusAndCurrency(status, currency) {
     var filteredData = invoicesData.filter(function(item) {
        
         var currentDate = new Date();
-        // var dueDate = new Date(item.U_DueDateAR);
-        var dueDate = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+        // var dueDate = new Date(item.DocDueDate);
+        var dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
         
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         // var dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
@@ -1086,7 +1088,7 @@ function openModalByStatusAndCurrency(status, currency) {
 function openModalByStatusAndCurrencyAndType(status, currency, type) {
     var filteredData = invoicesData.filter(function(item) {
         var currentDate = new Date();
-        var dueDate =item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+        var dueDate =item.DocDueDate ? new Date(item.DocDueDate) : null;
 
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
@@ -1136,7 +1138,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         '<th><a href="#" class="sort" data-column="DocDate" data-order="asc">Invoice Date</a></th>' +
         '<th><a href="#" class="sort" data-column="terms.PymntGroup" data-order="asc">Payment Term</a></th>' +
         '<th><a href="#" class="sort" data-column="U_BaseDate" data-order="asc">Baseline Date</a></th>' +
-        '<th><a href="#" class="sort" data-column="U_DueDateAR" data-order="asc">Invoice Due Date</a></th>' +
+        '<th><a href="#" class="sort" data-column="DocDueDate" data-order="asc">Invoice Due Date</a></th>' +
         '<th><a href="#" class="sort" data-column="usdBalance" data-order="asc">Invoice Balance USD</a></th>' +
         '<th><a href="#" class="sort" data-column="euroBalance" data-order="asc">Invoice Balance EUR</a></th>' +
         '<th><a href="#" class="sort" data-column="phpTBalance" data-order="asc">Invoice Balance PHP-T</a></th>' +
@@ -1252,8 +1254,8 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
     }
 
     var now = new Date();
-    // var your_date = new Date(item.U_DueDateAR);
-    var your_date = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+    // var your_date = new Date(item.DocDueDate);
+    var your_date = item.DocDueDate ? new Date(item.DocDueDate) : null;
 
     var currentDateUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
     // var dueDateUTC = Date.UTC(your_date.getFullYear(), your_date.getMonth(), your_date.getDate());
@@ -1301,7 +1303,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         '<td>' + formatDate(item.DocDate) + '</td>' +
         '<td>' + item.terms.PymntGroup + '</td>' +
         '<td>' + (item.U_BaseDate ? formatDate(item.U_BaseDate) : "NA") + '</td>' +
-        '<td>' + (item.U_DueDateAR ? formatDate(item.U_DueDateAR) : 'TBA') + '</td>' +
+        '<td>' + (item.DocDueDate ? formatDate(item.DocDueDate) : 'TBA') + '</td>' +
         '<td>' + (usd !== "" ? '$' + '' +parseFloat(usd).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
         '<td>' + (euro !== "" ? '€' + '' +parseFloat(euro).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
         '<td>' + (php_t !== "" ? '₱' + '' +parseFloat(php_t).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
