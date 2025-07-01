@@ -1195,7 +1195,8 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
                     }
                 });
             }
-            finalTotal = item.DocTotalFC - totalFrgnTRIWhse;
+            // finalTotal = item.DocTotalFC - totalFrgnTRIWhse;
+            finalTotal = (item.DocTotalFC > 0 ? item.DocTotalFC : item.DocTotal ) - totalFrgnTRIWhse;
     } else if (company === 'Triangle Shipments') {
         if (item.inv1 && Array.isArray(item.inv1)) {
                 item.inv1.forEach(function (subItem) {
