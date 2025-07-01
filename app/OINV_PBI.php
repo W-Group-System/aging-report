@@ -46,5 +46,9 @@ class OINV_PBI extends Model
     {
         return $this->hasMany(PCH1_PBI::class,'U_InvoiceNo2','U_InvoiceNo2');
     }
+    public function inv1_pbi()
+    {
+        return $this->hasMany(INV1_PBI::class, 'DocEntry', 'DocEntry');
+    }
 
 }

@@ -14,4 +14,8 @@ class INV1 extends Model
     {
         return $this->belongsTo(OINV::class, 'DocEntry', 'DocEntry');
     }
+    public function delivery()
+    {
+        return $this->belongsTo(ODLN::class, 'BaseEntry', 'DocEntry');
+    }
 }

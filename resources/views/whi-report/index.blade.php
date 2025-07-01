@@ -393,7 +393,13 @@
                                                 ?></td>
                                             <td>{{date('m/d/Y', strtotime($invoice->DocDate))}}</td>
                                             <td>{{$invoice->terms->PymntGroup}}</td>
-                                            <td>@if($invoice->U_BaseDate != null){{date('m/d/Y', strtotime($invoice->U_BaseDate))}}@else NA @endif</td>
+                                            {{-- <td>@if($invoice->U_BaseDate != null){{date('m/d/Y', strtotime($invoice->U_BaseDate))}}@else NA @endif</td> --}}
+                                            {{-- @php
+                                                $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
+                                                $baselineDate = optional(optional($deliveryLine)->delivery)->U_BaseDate;
+                                            @endphp --}}
+
+                                            <td>@if($invoice->baseline_date != null){{date('m/d/Y', strtotime($invoice->baseline_date))}}@else NA @endif</td></td>
                                             <td>
                                                 {{-- @if(!empty($invoice->U_DueDateAR))
                                                 {{ date('m/d/Y', strtotime($invoice->U_DueDateAR)) }} --}}
@@ -1138,7 +1144,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         '<th><a href="#" class="sort" data-column="DocTotalFC" data-order="asc">Original Invoice Amount</a></th>' +
         '<th><a href="#" class="sort" data-column="DocDate" data-order="asc">Invoice Date</a></th>' +
         '<th><a href="#" class="sort" data-column="terms.PymntGroup" data-order="asc">Payment Term</a></th>' +
-        '<th><a href="#" class="sort" data-column="U_BaseDate" data-order="asc">Baseline Date</a></th>' +
+        '<th><a href="#" class="sort" data-column="baseline_date" data-order="asc">Baseline Date</a></th>' +
         '<th><a href="#" class="sort" data-column="DocDueDate" data-order="asc">Invoice Due Date</a></th>' +
         '<th><a href="#" class="sort" data-column="usdBalance" data-order="asc">Invoice Balance USD</a></th>' +
         '<th><a href="#" class="sort" data-column="euroBalance" data-order="asc">Invoice Balance EUR</a></th>' +
@@ -1304,7 +1310,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         '<td>' + formattedFinalTotal + '</td>' +
         '<td>' + formatDate(item.DocDate) + '</td>' +
         '<td>' + item.terms.PymntGroup + '</td>' +
-        '<td>' + (item.U_BaseDate ? formatDate(item.U_BaseDate) : "NA") + '</td>' +
+        '<td>' + (item.baseline_date ? formatDate(item.baseline_date) : "NA") + '</td>' +
         '<td>' + (item.DocDueDate ? formatDate(item.DocDueDate) : 'TBA') + '</td>' +
         '<td>' + (usd !== "" ? '$' + '' +parseFloat(usd).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
         '<td>' + (euro !== "" ? '€' + '' +parseFloat(euro).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +

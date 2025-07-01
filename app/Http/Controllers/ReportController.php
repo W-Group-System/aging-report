@@ -28,7 +28,7 @@ class ReportController extends Controller
             $query1 = OINV::whereDoesntHave('warehouse', function($query) {
                 $query->where('WhsCode', 'TRI Whse');
             })
-            ->with('payments', 'terms', 'manager', 'remark')
+            ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
             ->where('CardName', '!=', 'Mariel Tan')
             ->where('NumAtCard', '!=', 'WHI20-312L CCC')
             ->where('NumAtCard', '!=', 'WHI20-280L CCC')
@@ -50,7 +50,7 @@ class ReportController extends Controller
             ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
             ->get();
 
-            $query2 = OINV::with('payments', 'terms', 'manager', 'remark')
+            $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
             ->whereIn('DocEntry', $matchingDocEntries)
             ->where('DocStatus', 'O')
             ->get();
@@ -83,7 +83,8 @@ class ReportController extends Controller
                 } else {
                     $days_late = null; 
                 }
-        
+                $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
+                $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
                 $invoice->days_late = $days_late; 
                 return $invoice;
             });
@@ -93,7 +94,7 @@ class ReportController extends Controller
             $query1 = OINV::whereHas('warehouse', function($query) {
                 $query->where('WhsCode', 'TRI Whse');
             })
-            ->with('payments', 'terms', 'manager', 'remark')
+            ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
             ->where('CardName', '!=', 'Mariel Tan')
             ->where('NumAtCard', '!=', 'WHI20-312L CCC')
             ->where('NumAtCard', '!=', 'WHI20-280L CCC')
@@ -115,7 +116,7 @@ class ReportController extends Controller
             ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
             ->get();
 
-            $query2 = OINV::with('payments', 'terms', 'manager', 'remark')
+            $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
             ->whereIn('DocEntry', $matchingDocEntries)
             ->where('DocStatus', 'O')
             ->get();
@@ -141,7 +142,8 @@ class ReportController extends Controller
                 } else {
                     $days_late = null; 
                 }
-        
+                $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
+                $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
                 $invoice->days_late = $days_late; 
                 return $invoice;
             });
@@ -149,7 +151,9 @@ class ReportController extends Controller
         }
         // 5/14/24 JunJihad Apply Date Between Start
        elseif ($request->company == "PBI") {
-            $query = OINV_PBI::with('payments', 'terms', 'manager', 'remark')->where('CardCode', 'not like', 'LL-%')->where('DocStatus', 'O');
+            $query = OINV_PBI::with('payments', 'terms', 'manager', 'remark')
+            ->where('CardCode', 'not like', 'LL-%')
+            ->where('DocStatus', 'O');
 
             if ($request->filled('end_date')) {
                 $query->where('DocDate', '<=', $request->end_date);
@@ -169,6 +173,8 @@ class ReportController extends Controller
                     $days_late = null; 
                 }
         
+                $deliveryLine = $invoice->inv1_pbi->firstWhere('BaseType', 15);
+                $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
                 $invoice->days_late = $days_late; 
                 return $invoice;
             });
