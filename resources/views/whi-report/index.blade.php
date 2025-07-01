@@ -376,7 +376,8 @@
                                                             $totalFrgnTRIWhse += $item->TotalFrgn;
                                                         }
                                                     }
-                                                    $finalTotal = $invoice->DocTotalFC - $totalFrgnTRIWhse;
+                                                    // $finalTotal = $invoice->DocTotalFC - $totalFrgnTRIWhse;
+                                                    $finalTotal = ($invoice->DocTotalFC <= 0 ? $invoice->DocTotal : $invoice->DocTotalFC) - $totalFrgnTRIWhse;
                                                 }  elseif ($company === 'Triangle Shipments') {
                                                     foreach ($invoice->inv1 as $item) {
                                                         if ($item->WhsCode === 'TRI Whse') {
