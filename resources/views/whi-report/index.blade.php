@@ -403,11 +403,20 @@
                                             <td>
                                                 {{-- @if(!empty($invoice->U_DueDateAR))
                                                 {{ date('m/d/Y', strtotime($invoice->U_DueDateAR)) }} --}}
-                                                @if(!empty($invoice->DocDueDate))
-                                                {{ date('m/d/Y', strtotime($invoice->DocDueDate)) }}
+                                                 @if ($company === 'PBI')
+                                                     @if(!empty($invoice->U_DueDateAR))
+                                                    {{ date('m/d/Y', strtotime($invoice->U_DueDateAR)) }}
+                                                    @else
+                                                    TBA
+                                                    @endif
                                                 @else
-                                                TBA
+                                                    @if(!empty($invoice->DocDueDate))
+                                                        {{ date('m/d/Y', strtotime($invoice->DocDueDate)) }}
+                                                        @else
+                                                        TBA
+                                                    @endif
                                                 @endif
+                                                
                                         </td>
                                             @php
                                             
@@ -429,31 +438,90 @@
                                                     if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
-                                                    if (empty($invoice->DocDueDate)) {
+                                                    if ($company === 'PBI') {
+                                                        if (empty($invoice->U_DueDateAR)) {
+                                                            $total_current_usd += $final_amount; 
+                                                        } else {
+                                                            $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                            if ($dueDateTimestamp === false) {
+                                                                $total_current_usd += $final_amount;
+                                                            } else {
+                                                                $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                                if ($daysLate <= 0) {
+                                                                    $total_current_usd += $final_amount;
+                                                                } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                    $total_month_usd += $final_amount;
+                                                                } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                    $total_twomonth_usd += $final_amount;
+                                                                } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                    $total_threemonth_usd += $final_amount;
+                                                                } else {
+                                                                    $total_over_days_usd += ($final_amount);
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        if (empty($invoice->DocDueDate)) {
                                                         $total_current_usd += $final_amount; 
                                                     } else {
                                                         $dueDateTimestamp = strtotime($invoice->DocDueDate);
                                                         if ($dueDateTimestamp === false) {
-                                                            $total_current_usd += $final_amount;
-                                                        } else {
-                                                            $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
-
-                                                            if ($daysLate <= 0) {
                                                                 $total_current_usd += $final_amount;
-                                                            } elseif ($daysLate >= 1 && $daysLate <= 30) {
-                                                                $total_month_usd += $final_amount;
-                                                            } elseif ($daysLate >= 31 && $daysLate <= 60) {
-                                                                $total_twomonth_usd += $final_amount;
-                                                            } elseif ($daysLate >= 61 && $daysLate <= 90) {
-                                                                $total_threemonth_usd += $final_amount;
                                                             } else {
-                                                                $total_over_days_usd += ($final_amount);
+                                                                $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                                if ($daysLate <= 0) {
+                                                                    $total_current_usd += $final_amount;
+                                                                } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                    $total_month_usd += $final_amount;
+                                                                } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                    $total_twomonth_usd += $final_amount;
+                                                                } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                    $total_threemonth_usd += $final_amount;
+                                                                } else {
+                                                                    $total_over_days_usd += ($final_amount);
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
                                                 elseif($invoice->DocCur == "EUR") {
-                                                    $total_euro +=$final_amount;
+                                                    if($company === 'PBI') {
+                                                        $total_euro +=$final_amount;
+                                                        $euro = number_format($final_amount,2);
+
+                                                        $end_date = strtotime(Request::get('end_date'));
+                                                        if (empty($end_date)) {
+                                                            $end_date = time(); 
+                                                        }
+                                                        $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                        $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                        if (empty($invoice->U_DueDateAR)) {
+                                                            $total_current_euro += $final_amount; 
+                                                        } else {
+                                                            $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                            if ($dueDateTimestamp === false) {
+                                                                $total_current_euro += $final_amount;
+                                                            } else {
+                                                                $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                                if ($daysLate <= 0) {
+                                                                    $total_current_euro += $final_amount;
+                                                                } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                    $total_month_euro += $final_amount;
+                                                                } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                    $total_twomonth_euro += $final_amount;
+                                                                } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                    $total_threemonth_euro += $final_amount;
+                                                                } else {
+                                                                    $total_over_days_euro += $final_amount;
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $total_euro +=$final_amount;
                                                     $euro = number_format($final_amount,2);
 
                                                     $end_date = strtotime(Request::get('end_date'));
@@ -466,22 +534,23 @@
                                                     if (empty($invoice->DocDueDate)) {
                                                         $total_current_euro += $final_amount; 
                                                     } else {
-                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
-                                                        if ($dueDateTimestamp === false) {
-                                                            $total_current_euro += $final_amount;
-                                                        } else {
-                                                            $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
-
-                                                            if ($daysLate <= 0) {
+                                                            $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                            if ($dueDateTimestamp === false) {
                                                                 $total_current_euro += $final_amount;
-                                                            } elseif ($daysLate >= 1 && $daysLate <= 30) {
-                                                                $total_month_euro += $final_amount;
-                                                            } elseif ($daysLate >= 31 && $daysLate <= 60) {
-                                                                $total_twomonth_euro += $final_amount;
-                                                            } elseif ($daysLate >= 61 && $daysLate <= 90) {
-                                                                $total_threemonth_euro += $final_amount;
                                                             } else {
-                                                                $total_over_days_euro += $final_amount;
+                                                                $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                                if ($daysLate <= 0) {
+                                                                    $total_current_euro += $final_amount;
+                                                                } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                    $total_month_euro += $final_amount;
+                                                                } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                    $total_twomonth_euro += $final_amount;
+                                                                } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                    $total_threemonth_euro += $final_amount;
+                                                                } else {
+                                                                    $total_over_days_euro += $final_amount;
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -503,31 +572,60 @@
                                                             if (empty($end_date)) {
                                                                 $end_date = time(); 
                                                             }
-                                                            $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                            if ($company === 'PBI'){
+                                                                $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                            } else {
+                                                                $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                            }
                                                             $daysLate = ($end_date - $dueDateTimestamp) / (60 * 60 * 24);
 
-                                                            if (empty($invoice->DocDueDate)) {
-                                                            $total_current_php_t += $php_t_amount; 
-                                                    } else {
-                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
-                                                        if ($dueDateTimestamp === false) {
-                                                            $total_current_php_t += $php_t_amount;
-                                                        } else {
-                                                            $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+                                                            if ($company === 'PBI') {
+                                                                if (empty($invoice->U_DueDateAR)) {
+                                                                    $total_current_php_t += $php_t_amount; 
+                                                                } else {
+                                                                    $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                                    if ($dueDateTimestamp === false) {
+                                                                        $total_current_php_t += $php_t_amount;
+                                                                    } else {
+                                                                        $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
 
-                                                            if ($daysLate <= 0) {
-                                                                $total_current_php_t += $php_t_amount;
-                                                            } elseif ($daysLate >= 1 && $daysLate <= 30) {
-                                                                $total_month_php_t += $php_t_amount;
-                                                            } elseif ($daysLate >= 31 && $daysLate <= 60) {
-                                                                $total_twomonth_php_t += $php_t_amount;
-                                                            } elseif ($daysLate >= 61 && $daysLate <= 90) {
-                                                                $total_threemonth_php_t += $php_t_amount;
+                                                                        if ($daysLate <= 0) {
+                                                                            $total_current_php_t += $php_t_amount;
+                                                                        } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                            $total_month_php_t += $php_t_amount;
+                                                                        } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                            $total_twomonth_php_t += $php_t_amount;
+                                                                        } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                            $total_threemonth_php_t += $php_t_amount;
+                                                                        } else {
+                                                                            $total_over_days_php_t += $php_t_amount;
+                                                                        }
+                                                                    }
+                                                                }
                                                             } else {
-                                                                $total_over_days_php_t += $php_t_amount;
+                                                                if (empty($invoice->DocDueDate)) {
+                                                                    $total_current_php_t += $php_t_amount; 
+                                                                } else {
+                                                                    $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                                    if ($dueDateTimestamp === false) {
+                                                                        $total_current_php_t += $php_t_amount;
+                                                                    } else {
+                                                                        $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                                        if ($daysLate <= 0) {
+                                                                            $total_current_php_t += $php_t_amount;
+                                                                        } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                            $total_month_php_t += $php_t_amount;
+                                                                        } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                            $total_twomonth_php_t += $php_t_amount;
+                                                                        } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                            $total_threemonth_php_t += $php_t_amount;
+                                                                        } else {
+                                                                            $total_over_days_php_t += $php_t_amount;
+                                                                        }
+                                                                    }
+                                                                }
                                                             }
-                                                        }
-                                                    }
                                                 
                                                         @endphp {{'₱'."".$php}}
                                                     @else NA 
@@ -545,31 +643,60 @@
                                                             if (empty($end_date)) {
                                                                 $end_date = time(); 
                                                             }
-                                                            $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                            if($company === 'PBI'){
+                                                                 $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                            } else{
+                                                                 $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                            }
                                                             $daysLate = ($end_date - $dueDateTimestamp) / (60 * 60 * 24);
 
-                                                            if (empty($invoice->DocDueDate)) {
-                                                            $total_current_php_nt += $php_nt_amount; 
-                                                    } else {
-                                                        $dueDateTimestamp = strtotime($invoice->DocDueDate);
-                                                        if ($dueDateTimestamp === false) {
-                                                            $total_current_php_nt += $php_nt_amount;
-                                                        } else {
-                                                            $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+                                                            if($company === 'PBI'){
+                                                                if (empty($invoice->U_DueDateAR)) {
+                                                                $total_current_php_nt += $php_nt_amount; 
+                                                                } else {
+                                                                    $dueDateTimestamp = strtotime($invoice->U_DueDateAR);
+                                                                    if ($dueDateTimestamp === false) {
+                                                                        $total_current_php_nt += $php_nt_amount;
+                                                                    } else {
+                                                                        $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
 
-                                                            if ($daysLate <= 0) {
-                                                                $total_current_php_nt += $php_nt_amount;
-                                                            } elseif ($daysLate >= 1 && $daysLate <= 30) {
-                                                                $total_month_php_nt += $php_nt_amount;
-                                                            } elseif ($daysLate >= 31 && $daysLate <= 60) {
-                                                                $total_twomonth_php_nt += $php_nt_amount;
-                                                            } elseif ($daysLate >= 61 && $daysLate <= 90) {
-                                                                $total_threemonth_php_nt += $php_nt_amount;
-                                                            } else {
-                                                                $total_over_days_php_nt += $php_nt_amount;
+                                                                        if ($daysLate <= 0) {
+                                                                            $total_current_php_nt += $php_nt_amount;
+                                                                        } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                            $total_month_php_nt += $php_nt_amount;
+                                                                        } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                            $total_twomonth_php_nt += $php_nt_amount;
+                                                                        } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                            $total_threemonth_php_nt += $php_nt_amount;
+                                                                        } else {
+                                                                            $total_over_days_php_nt += $php_nt_amount;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            } else{
+                                                                if (empty($invoice->DocDueDate)) {
+                                                                $total_current_php_nt += $php_nt_amount; 
+                                                                } else {
+                                                                    $dueDateTimestamp = strtotime($invoice->DocDueDate);
+                                                                    if ($dueDateTimestamp === false) {
+                                                                        $total_current_php_nt += $php_nt_amount;
+                                                                    } else {
+                                                                        $daysLate = ceil(($end_date - $dueDateTimestamp) / (60 * 60 * 24));
+
+                                                                        if ($daysLate <= 0) {
+                                                                            $total_current_php_nt += $php_nt_amount;
+                                                                        } elseif ($daysLate >= 1 && $daysLate <= 30) {
+                                                                            $total_month_php_nt += $php_nt_amount;
+                                                                        } elseif ($daysLate >= 31 && $daysLate <= 60) {
+                                                                            $total_twomonth_php_nt += $php_nt_amount;
+                                                                        } elseif ($daysLate >= 61 && $daysLate <= 90) {
+                                                                            $total_threemonth_php_nt += $php_nt_amount;
+                                                                        } else {
+                                                                            $total_over_days_php_nt += $php_nt_amount;
+                                                                        }
+                                                                    }
+                                                                }
                                                             }
-                                                        }
-                                                    }
                                                         @endphp 
                                                     {{'₱'."".$php}}
                                                     @else NA 
@@ -583,7 +710,11 @@
                                                 if (empty($end_date)) {
                                                         $end_date = time(); 
                                                     }
-                                                    $due_date = !empty($invoice->DocDueDate) ? strtotime(date('m/d/Y', strtotime($invoice->DocDueDate))) : null;
+                                                    if($company === 'PBI'){
+                                                        $due_date = !empty($invoice->U_DueDateAR) ? strtotime(date('m/d/Y', strtotime($invoice->DocDueDate))) : null;
+                                                    } else {
+                                                        $due_date = !empty($invoice->DocDueDate) ? strtotime(date('m/d/Y', strtotime($invoice->DocDueDate))) : null;
+                                                    }
     
                                                 if ($due_date !== null) {
                                                     $datediff = $end_date - $due_date;
@@ -1023,7 +1154,12 @@ function openModal(filterColumn) {
     var filteredData = invoicesData.filter(function (item) {
         var currentDate = new Date();
         // var dueDate = new Date(item.DocDueDate);
-        var dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
+        var dueDate = null;
+        if (company === 'PBI') {
+            dueDate = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+        } else {
+            dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
+        }
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         // var dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
@@ -1059,7 +1195,12 @@ function openModalByStatusAndCurrency(status, currency) {
        
         var currentDate = new Date();
         // var dueDate = new Date(item.DocDueDate);
-        var dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
+        var dueDate = null;
+        if (company === 'PBI') {
+            dueDate = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+        } else {
+            dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
+        }
         
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         // var dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
@@ -1095,7 +1236,12 @@ function openModalByStatusAndCurrency(status, currency) {
 function openModalByStatusAndCurrencyAndType(status, currency, type) {
     var filteredData = invoicesData.filter(function(item) {
         var currentDate = new Date();
-        var dueDate =item.DocDueDate ? new Date(item.DocDueDate) : null;
+        var dueDate = null;
+        if (company === 'PBI') {
+            dueDate = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+        } else {
+            dueDate = item.DocDueDate ? new Date(item.DocDueDate) : null;
+        }
 
         var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         var dueDateUTC = dueDate ? Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
@@ -1145,7 +1291,10 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         '<th><a href="#" class="sort" data-column="DocDate" data-order="asc">Invoice Date</a></th>' +
         '<th><a href="#" class="sort" data-column="terms.PymntGroup" data-order="asc">Payment Term</a></th>' +
         '<th><a href="#" class="sort" data-column="baseline_date" data-order="asc">Baseline Date</a></th>' +
-        '<th><a href="#" class="sort" data-column="DocDueDate" data-order="asc">Invoice Due Date</a></th>' +
+        '<th><a href="#" class="sort" data-column="' + 
+            (company === 'PBI' ? 'U_DueDateAR' : 'DocDueDate') + 
+            '" data-order="asc">Invoice Due Date</a></th>' +
+        // '<th><a href="#" class="sort" data-column="DocDueDate" data-order="asc">Invoice Due Date</a></th>' +
         '<th><a href="#" class="sort" data-column="usdBalance" data-order="asc">Invoice Balance USD</a></th>' +
         '<th><a href="#" class="sort" data-column="euroBalance" data-order="asc">Invoice Balance EUR</a></th>' +
         '<th><a href="#" class="sort" data-column="phpTBalance" data-order="asc">Invoice Balance PHP-T</a></th>' +
@@ -1263,8 +1412,14 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
 
     var now = new Date();
     // var your_date = new Date(item.DocDueDate);
-    var your_date = item.DocDueDate ? new Date(item.DocDueDate) : null;
+    // var your_date = item.DocDueDate ? new Date(item.DocDueDate) : null;
+    var your_date = null;
 
+    if (company === 'PBI') {
+        your_date = item.U_DueDateAR ? new Date(item.U_DueDateAR) : null;
+    } else {
+        your_date = item.DocDueDate ? new Date(item.DocDueDate) : null;
+    }
     var currentDateUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
     // var dueDateUTC = Date.UTC(your_date.getFullYear(), your_date.getMonth(), your_date.getDate());
     var dueDateUTC = your_date ? Date.UTC(your_date.getFullYear(), your_date.getMonth(), your_date.getDate()) : null;
@@ -1311,7 +1466,12 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         '<td>' + formatDate(item.DocDate) + '</td>' +
         '<td>' + item.terms.PymntGroup + '</td>' +
         '<td>' + (item.baseline_date ? formatDate(item.baseline_date) : "NA") + '</td>' +
-        '<td>' + (item.DocDueDate ? formatDate(item.DocDueDate) : 'TBA') + '</td>' +
+        // '<td>' + (item.DocDueDate ? formatDate(item.DocDueDate) : 'TBA') + '</td>' +
+        '<td>' + (
+                    company === 'PBI'
+                        ? (item.U_DueDateAR ? formatDate(item.U_DueDateAR) : 'TBA')
+                        : (item.DocDueDate ? formatDate(item.DocDueDate) : 'TBA')
+                ) + '</td>' +
         '<td>' + (usd !== "" ? '$' + '' +parseFloat(usd).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
         '<td>' + (euro !== "" ? '€' + '' +parseFloat(euro).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
         '<td>' + (php_t !== "" ? '₱' + '' +parseFloat(php_t).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "NA") + '</td>' +
