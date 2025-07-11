@@ -380,7 +380,7 @@
         }
         .new-col-left {
             float: left; 
-            width: 50%; 
+            width: 70%; 
             font-size: 13px;
         }
 

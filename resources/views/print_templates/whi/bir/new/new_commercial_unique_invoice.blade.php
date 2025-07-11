@@ -435,7 +435,7 @@
             <span style="font-size: 17px"></span>
             {{-- <div class="line-three">No.: {{ $soa_no }}</div> --}}
             @if ($details->isNotEmpty())
-            <div class="date"> {{ \Carbon\Carbon::parse(optional($details->first())->DocDueDate)->format('F j, Y') }}</div>
+            <div class="date"> {{ \Carbon\Carbon::parse(optional($details->first())->Dated)->format('F j, Y') }}</div>
             @endif
         </div>
     </div>
@@ -451,7 +451,7 @@
         <div class="info-row" style="margin-bottom: 15px">
             <span class="info-label"></span>
             <span class="info-colon"></span>
-            <span class="info-value"></strong>{{ optional($details->first())->U_TaxID }}</span>
+            <span class="info-value">{{ optional($details->first())->U_TaxID }}</span>
         </div>
         @php
             $address = optional($details->first())->Address;
@@ -521,55 +521,71 @@
                 <td></td>
                 <td colspan="2"  style="font-weight: bold; padding:10px; text-align: center">{{ optional($details->first())->U_Remark3 }}</td>
             </tr>
+            @php
+                $total_packing = 0;
+                $total_packing_exp1 = 0;
+                $total_packing_exp2 = 0;
+                $total_quantity = 0;
+                $total_quantity_exp1 = 0;
+                $total_quantity_exp2 = 0;
+                $total_amount = 0;
+                $total_amount_exp1 = 0;
+                $total_amount_exp2 = 0;
+            @endphp
+
             @foreach ($details as $detail)
-            
+                @php
+                    if ($detail->U_Label_as == 'Ricogel 86130D (Sample)') {
+                        $total_packing_exp1 += $detail->U_Bagsperlot;
+                        $total_quantity_exp1 += $detail->Quantity;
+                        $total_amount_exp1 += $detail->Linetotal;
+                    } elseif ($detail->U_Label_as == 'Ricogel 83985') {
+                        $total_packing_exp2 += $detail->U_Bagsperlot;
+                        $total_quantity_exp2 += $detail->Quantity;
+                        $total_amount_exp2 += $detail->Linetotal;
+                    } else {
+                        $total_packing += $detail->U_Bagsperlot;
+                        $total_quantity += $detail->Quantity;
+                        $total_amount += $detail->Linetotal; 
+                    }
+                @endphp
+            @endforeach
+
+            @if ($total_packing > 0)
             <tr>
-                <?php
-                $label = str_replace('(', '<br>(', $detail->U_Label_as);
-                ?>
-                <td style="font-weight: bold">{!! $label !!}</td>
+                <td style="font-weight: bold">RICOGEL CARRAGEENAN</td>
+                {{-- <td>{{ $total_packing }} {{ $details->first()->U_packUOM }}</td> --}}
                 <td></td>
                 <td>
-                    @if ($detail->U_printUOM == "lbs")
-                        {{ number_format(2.2 * $detail->Quantity, 2) }} {{ $detail->U_printUOM }}
-                    @else
-                        @if ($detail->Quantity)
-                            {{ number_format($detail->Quantity, 2) }}
-                        @endif
-
-                        @if (!empty($detail->U_Netweight))
-                            {{ $detail->U_printUOM }}
-                        @endif
-                    @endif
+                    {{ number_format($total_quantity, 2) }} {{ $details->first()->U_printUOM }}
                 </td>
-                <td> 
-                     {{-- @if ($detail->U_Netweight != '') --}}
-                     {{-- {{ optional($details->first())->DocCur }} {{ ($detail->Linetotal) /  ($detail->Quantity)}} / --}}
-                     @if ($detail->U_printUOM == "lbs")
-                        {{ optional($details->first())->DocCur }} {{ (number_format($detail->Price / 2.2 ,2))}} /
-                        @if ($detail->U_printUOM == 'lbs')
-                        lb
-                        @else
-                        kg   
-                        @endif
-                    @else
-                        {{ optional($details->first())->DocCur }} {{ (number_format($detail->Price,2))}} /
-                        @if ($detail->U_printUOM == 'lbs')
-                        lb
-                        @else
-                        kg   
-                        @endif
-                    @endif
-
-                     
-                    {{-- @endif --}}
+                <td>
+                    {{ optional($details->first())->DocCur }}
+                    {{ $total_quantity > 0 ? number_format($total_amount / $total_quantity, 4) : 0 }} /
+                    {{ $details->first()->U_printUOM == 'lbs' ? 'lb' : 'kg' }}
                 </td>
-                <td>{{ optional($details->first())->DocCur }} {{ number_format($detail->Linetotal, 2) }}</td>
+                <td>{{ optional($details->first())->DocCur }} {{ number_format($total_amount, 2) }}</td>
+            </tr>
+            @endif
+
+            @if ($total_packing_exp1 > 0)
+            <tr>
+                <td style="font-weight: bold">Ricogel 86130D (Sample)</td>
+                <td></td>
+                <td>
+                    {{ number_format($total_quantity_exp1, 2) }} {{ $details->first()->U_printUOM }}
+                </td>
+                <td>
+                    {{ optional($details->first())->DocCur }}
+                    {{ $total_quantity_exp1 > 0 ? number_format($total_amount_exp1 / $total_quantity_exp1, 4) : 0 }} /
+                    {{ $details->first()->U_printUOM == 'lbs' ? 'lb' : 'kg' }}
+                </td>
+                <td>{{ optional($details->first())->DocCur }} {{ number_format($total_amount_exp1, 2) }}</td>
             </tr>
             <tr>
-                <td>{{ ($detail->U_SupplierCode) }}</td>
+                <td>{{ $details->first()->U_SupplierCode }}</td>
             </tr>
-            @endforeach
+            @endif
             <tr>
                 <td style=" padding:10px; text-align: center">{{ optional($details->first())->U_Remark1 }}</td>
                 <td></td>
@@ -655,12 +671,12 @@
             <div class="info-row">
                 <span class="info-name"></span>
                 <span class="info-colon"></span>
-                <span class="info-detail"></span>
+                <span class="info-detail">{{ optional($details->first())->DocCur }} {{ number_format($total, 2) }}</span>
             </div>
             <div class="info-row">
                 <span class="info-name"></span>
                 <span class="info-colon"></span>
-                <span class="info-detail">{{ optional($details->first())->DocCur }} {{ number_format($total, 2) }}</span>
+                <span class="info-detail"></span>
             </div>
         </div>
     </div>
