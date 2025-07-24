@@ -124,7 +124,7 @@
             word-wrap: break-word;
         }
         .customer-container .right-column .info-value{
-            width: 50%;
+            width: 54%;
             display: inline-block;
             vertical-align: top;  
             font-size: 12px;
