@@ -681,12 +681,10 @@
         <div class="new-col-left" style="margin-top: 77px; font-size:16px; height:80px">
             <div class="info-row">
                 <span class="info-name"></span>
-                <span class="info-colon"></span>
                 <span class="info-detail">{{ optional($details->first())->DocCur }} {{ number_format($total, 2) }}</span>
             </div>
             <div class="info-row">
                 <span class="info-name"></span>
-                <span class="info-colon"></span>
                 <span class="info-detail">{{ optional($details->first())->DocCur }} {{ number_format($vatable_amount,2) }}</span>
             </div>
             <div class="info-row">

@@ -659,7 +659,6 @@
             </div>
             <div class="info-row">
                 <span class="info-name"></span>
-                <span class="info-colon"></span>
                 <span class="info-detail">{{ optional($details->first())->DocCur }} {{ number_format($total, 2) }}</span>
             </div>
         </div>
