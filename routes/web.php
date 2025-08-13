@@ -46,6 +46,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/whi_usa_soa_zero_rated/{DocNum}', 'PrinController@whi_soa_print')->name('whi_usa_soa_zero_rated');
     Route::get('/whi_usa_vatable/{DocNum}', 'PrinController@whi_soa_print')->name('whi_usa_vatable');
 
+    Route::get('/deleteWhiSoa/{id}', 'PrinController@delete');
+    Route::get('/deletePbiSoa/{id}', 'PrinController@delete');
+
+
     // Credit Note 
     Route::get('/credit_note', 'PrinController@whi_credit_note_index');
     Route::post('/save_credit_note', 'PrinController@save_credit_note');
@@ -76,6 +80,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/whi_bir_edited_new_commercial_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_invoice');
     Route::get('/whi_bir_edited_new_commercial_vatable_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_vatable_invoice');
     Route::get('/whi_bir_edited_new_commercial_exempt_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_exempt_invoice');
+
+    Route::get('/bir_original_new_unique_commercial_invoice/{invoice_number}', 'CommercialInvoiceController@original_print')->name('bir_original_new_unique_invoice');
+
+    Route::get('/deleteWhiCi/{id}', 'CommercialInvoiceController@delete');
+    Route::get('/deletePbiCi/{id}', 'CommercialInvoiceController@delete');
+    Route::get('/deleteSpecialPbi/{id}', 'CommercialInvoiceController@delete');
 
 
     Route::post('/billing_statement_trade', 'PrinController@billing_statement')->name('billing_statement_trade');

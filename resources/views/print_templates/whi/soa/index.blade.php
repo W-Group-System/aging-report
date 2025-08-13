@@ -89,6 +89,11 @@
                                                     @else
                                                         <a target='_blank' href="{{ url('whi_usa_soa', $detail->asNew->id) }}" class="btn btn-info btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                     @endif
+                                                    <button type="button" class="btn btn-primary btn-danger" onclick="deleteInvoice({{ $detail->asNew->id }})"><i class="fa fa-sharp fa-trash"></i></button>
+                                                    <form id="delete-form-{{ $detail->asNew->id }}" action="{{ url('deleteWhiSoa/' . $detail->asNew->id) }}" method="GET" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
                                                     {{-- <a target='_blank' href="{{ url('whi_usa_soa_zero_rated', $detail->asNew->id) }}" class="btn btn-danger btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                     <a target='_blank' href="{{ url('whi_usa_vatable', $detail->asNew->id) }}" class="btn btn-success btn-outline" > <i class="fa fa-sharp fa-print"></i></a> --}}
                                                 @else
@@ -188,5 +193,23 @@
 @include('print_templates.whi.soa.soa_commercial_invoice_edit')
 @include('print_templates.whi.soa.soa_commercial_invoice_edited')
 @endforeach
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteInvoice(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
 @endsection
 

@@ -88,6 +88,11 @@
                                                     @else
                                                         <a target='_blank' href="{{ url('pbi_php_soa', $detail->asNew->id) }}" class="btn btn-info btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                     @endif
+                                                    <button type="button" class="btn btn-primary btn-danger" onclick="deleteInvoice({{ $detail->asNew->id }})"><i class="fa fa-sharp fa-trash"></i></button>
+                                                    <form id="delete-form-pbi-soa-{{ $detail->asNew->id }}" action="{{ url('deletePbiSoa/' . $detail->asNew->id) }}" method="GET" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
                                                 @else
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#soaCommercialEditPbi{{ $detail->DocEntry }}" ><i class="fa fa fa-plus"></i></button>
                                                 @endif
@@ -174,5 +179,24 @@
 @include('print_templates.pbi.soa.soa_commercial_invoice_edit')
 @include('print_templates.pbi.soa.soa_commercial_invoice_edited')
 @endforeach
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteInvoice(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-pbi-soa-' + id).submit();
+            }
+        });
+    }
+</script>
 @endsection
 

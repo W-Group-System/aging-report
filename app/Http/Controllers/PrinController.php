@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use PDF;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PrinController extends Controller
 {
@@ -1863,4 +1864,19 @@ class PrinController extends Controller
         }
     }
 
+    public function delete($id)
+    {
+        $soa = StatementOfAccount::find($id);
+
+        if ($soa) {
+            $soa->soaProduct()->delete();
+            $soa->delete();
+            Alert::success('Success Title', 'Deleted');
+        } else {
+            Alert::error('Error Title', 'Record not found');
+        }
+
+        return back();
+    }
+    
 }

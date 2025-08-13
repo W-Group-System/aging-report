@@ -38,6 +38,7 @@ use App\SalesInvoice;
 use App\SalesInvoiceProduct;
 use App\SisCode;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CommercialInvoiceController extends Controller
 {
@@ -619,6 +620,8 @@ function original_print(Request $request, $invoice_number){
             $view = 'print_templates.whi.bir.new.new_commercial_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_unique_invoice') {
             $view = 'print_templates.whi.bir.commercial_unique_invoice';
+        } elseif (Route::currentRouteName() === 'bir_original_new_unique_invoice') {
+            $view = 'print_templates.whi.bir.new.new_commercial_unique_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_vatable_invoice') {
             $view = 'print_templates.whi.bir.commercial_vatable_invoice';
         } elseif (Route::currentRouteName() === 'bir_original_vatable_new_invoice') {
@@ -649,6 +652,8 @@ function original_print(Request $request, $invoice_number){
         } elseif (Route::currentRouteName() === 'bir_original_vatable_new_invoice') {
             $pdf->setPaper('legal', 'portrait');
         } elseif (Route::currentRouteName() === 'bir_original_exempt_new_invoice') {
+            $pdf->setPaper('legal', 'portrait');
+        } elseif (Route::currentRouteName() === 'bir_original_new_unique_invoice') {
             $pdf->setPaper('legal', 'portrait');
         } else {
             $pdf->setPaper([0, 0, 622, 792], 'portrait');
@@ -1314,15 +1319,29 @@ function sales_invoice_index(Request $request)
     }
 
     public function deleteProduct($id)
-{
+    {
 
-    $product = BirInvoiceProduct::find($id);
-    if ($product) {
-        $product->delete();
-        return response()->json(['success' => true]);
+        $product = BirInvoiceProduct::find($id);
+        if ($product) {
+            $product->delete();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
     }
-    return response()->json(['success' => false]);
-}
 
+    public function delete($id)
+    {
+        $bir = BirInvoice::find($id);
+
+        if ($bir) {
+            $bir->products()->delete();
+            $bir->delete();
+            Alert::success('Success Title', 'Deleted');
+        } else {
+            Alert::error('Error Title', 'Record not found');
+        }
+
+        return back();
+    }
     
 }

@@ -63,6 +63,11 @@
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#pbiBirCommercialEditNew{{ $detail->asNew->id }}" ><i class="fa fa fa-pencil"></i></button>
                                                     @include('print_templates.print_lists.pbi.bir_commercial_list_edit_new_special')
                                                 <a target='_blank' href="{{ url('pbi_bir_edited_commercial_invoice_special', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                <button type="button" class="btn btn-primary btn-danger" onclick="deleteInvoice({{ $detail->asNew->id }})"><i class="fa fa-sharp fa-trash"></i></button>
+                                                    <form id="delete-special-pbi{{ $detail->asNew->id }}" action="{{ url('deleteSpecialPbi/' . $detail->asNew->id) }}" method="GET" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
                                                 @else
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#pbiBirCommercialEdit{{ $detail->DocEntry }}" ><i class="fa fa fa-plus"></i></button>
                                                     @include('print_templates.print_lists.pbi.bir_commercial_list_edit_special')
@@ -112,5 +117,23 @@
 {{-- <script src="{{ asset('/inside/login_css/js/plugins/dataTables/datatables.min.js')}}"></script> --}}
 {{-- <script src="{{ asset('/inside/login_css/js/plugins/chosen/chosen.jquery.js') }}"></script> --}}
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteInvoice(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-special-pbi' + id).submit();
+            }
+        });
+    }
+</script>
 @endsection
 

@@ -64,23 +64,24 @@
                                             <td>
                                                 @if ($detail->asNew)
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#birCommercialEditNew{{ $detail->asNew->id }}" ><i class="fa fa fa-pencil"></i></button>
-                                                    <a target='_blank' href="{{ url('whi_bir_edited_commercial_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('whi_bir_edited_new_commercial_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                 @else
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#birCommercialEdit{{ $detail->DocEntry }}" ><i class="fa fa fa-plus"></i></button>
                                                     <a target='_blank' href="{{ url('bir_original_unique_commercial_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('bir_original_new_unique_commercial_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i>New</a>
 
                                                 @endif
                                             </td>
                                             <td>
                                                 @if ($detail->asNew)
-                                                <a target='_blank' href="{{ url('whi_bir_edited_commercial_vatable_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                <a target='_blank' href="{{ url('whi_bir_edited_new_commercial_vatable_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                 @else
                                                 <a target='_blank' href="{{ url('bir_original_unique_commercial_vatable_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
                                                 @endif
                                             </td>
                                             <td>
                                                 @if ($detail->asNew)
-                                                <a target='_blank' href="{{ url('whi_bir_edited_commercial_exempt_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                <a target='_blank' href="{{ url('whi_bir_edited_new_commercial_exempt_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                 @else
                                                 <a target='_blank' href="{{ url('bir_original_unique_commercial_exempt_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
                                                 @endif
@@ -91,6 +92,11 @@
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#birCommercialEditNew{{ $detail->asNew->id }}" ><i class="fa fa fa-pencil"></i></button>
                                                     {{-- <a target='_blank' href="{{ url('whi_bir_edited_commercial_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a> --}}
                                                     <a target='_blank' href="{{ url('whi_bir_edited_new_commercial_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <button type="button" class="btn btn-primary btn-danger" onclick="deleteInvoice({{ $detail->asNew->id }})"><i class="fa fa-sharp fa-trash"></i></button>
+                                                    <form id="delete-form-ci{{ $detail->asNew->id }}" action="{{ url('deleteWhiCi/' . $detail->asNew->id) }}" method="GET" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
                                                 @else
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#birCommercialEdit{{ $detail->DocEntry }}" ><i class="fa fa fa-plus"></i></button>
                                                     {{-- <a target='_blank' href="{{ url('bir_original_commercial_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a> --}}
@@ -174,5 +180,24 @@
 @include('print_templates.print_lists.whi.bir_commercial_list_edit')
 @include('print_templates.print_lists.whi.bir_commercial_list_edit_new')
 @endforeach
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteInvoice(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-ci' + id).submit();
+            }
+        });
+    }
+</script>
 @endsection
 
