@@ -110,7 +110,7 @@
             margin-bottom: 10px
         }
         .customer-container .right-column .info-label{
-            width: 35%; 
+            width: 33%; 
             display: inline-block;
             vertical-align: top;  
             margin: 0;
@@ -124,7 +124,7 @@
             word-wrap: break-word;
         }
         .customer-container .right-column .info-value{
-            width: 54%;
+            width: 56%;
             display: inline-block;
             vertical-align: top;  
             font-size: 12px;
@@ -500,7 +500,7 @@
         </div>
     </div>
 </div>
-<div class="product-details" style="min-height: 257px; max-height:257px; margin-left:40px; margin-right:40px;">
+<div class="product-details" style="min-height: 257px; max-height:257px; margin-left:45px; margin-right:35px;">
     <table style="">
         <thead>
             <tr>
@@ -508,7 +508,7 @@
                 <th style="width: 15%; "></th>
                 <th style="width: 14%"></th>
                 <th style="width: 20%"></th>
-                <th style="width: 14%;"></th>
+                <th style="width: 17%;"></th>
             </tr>
         </thead>
         <tbody>
