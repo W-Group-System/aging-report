@@ -1140,13 +1140,16 @@
         // });
     });
 var end_date_param = '<?php echo Request::get("end_date"); ?>';
-var end_date;
+// var end_date;
 
-if (end_date_param !== '') {
-    end_date =Date.now();
-} else {
-    end_date = Date.now(); 
-}
+var urlParams = new URLSearchParams(window.location.search);
+var endDateParam = urlParams.get("end_date");
+var end_date = endDateParam ? new Date(endDateParam) : new Date();
+// if (end_date_param !== '') {
+//     end_date =Date.now();
+// } else {
+//     end_date = Date.now(); 
+// }
    var invoicesData = <?php echo json_encode($invoices); ?> ;
    console.log(invoicesData);
 function openModal(filterColumn) {
@@ -1191,9 +1194,13 @@ function openModal(filterColumn) {
 
 
 function openModalByStatusAndCurrency(status, currency) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var endDateParam = urlParams.get("end_date");
+
+    var currentDate = endDateParam ? new Date(endDateParam) : new Date();
     var filteredData = invoicesData.filter(function(item) {
        
-        var currentDate = new Date();
+        // var currentDate = new Date();
         // var dueDate = new Date(item.DocDueDate);
         var dueDate = null;
         if (company === 'PBI') {
@@ -1410,7 +1417,11 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         }
     }
 
-    var now = new Date();
+    var urlParams = new URLSearchParams(window.location.search);
+    var endDateParam = urlParams.get("end_date");
+
+    var now = endDateParam ? new Date(endDateParam) : new Date();
+    // var now = new Date();
     // var your_date = new Date(item.DocDueDate);
     // var your_date = item.DocDueDate ? new Date(item.DocDueDate) : null;
     var your_date = null;
