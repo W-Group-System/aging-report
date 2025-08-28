@@ -529,7 +529,7 @@
                         {{-- @endif --}}
                         <td></td>
                         {{-- <td >{{ $product->DocCur }} {{ number_format($vatable_unit_price,2) }}</td> --}}
-                        <td>{{ $product->DocCur }} {{ number_format($vatable_amount,2) }}</td>
+                        <td>{{ optional($details->first())->Currency }} {{ number_format($vatable_amount,2) }}</td>
                     </tr>
                 @endif
                     
