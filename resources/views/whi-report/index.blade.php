@@ -369,15 +369,24 @@
                                                 // $finalTotal = $invoice->DocTotalFC - $totalFrgnTRIWhse;
 
                                                 $totalFrgnTRIWhse = 0;
+                                                $originalInvoiceAmount = 0;
 
                                                 if ($company === 'WHI') {
                                                     foreach ($invoice->inv1 as $item) {
                                                         if ($item->WhsCode === 'TRI Whse') {
                                                             $totalFrgnTRIWhse += $item->TotalFrgn;
                                                         }
+                                                        if ($invoice->DocType === 'I') {
+                                                            $originalInvoiceAmount += ($item->Quantity * $item->Price);
+                                                        } else {
+                                                             $originalInvoiceAmount += ($item->Price);
+                                                        }
                                                     }
                                                     // $finalTotal = $invoice->DocTotalFC - $totalFrgnTRIWhse;
-                                                    $finalTotal = ($invoice->DocTotalFC <= 0 ? $invoice->DocTotal : $invoice->DocTotalFC) - $totalFrgnTRIWhse;
+
+                                                    // Original Invoice Amount
+                                                    // $finalTotal = ($invoice->DocTotalFC <= 0 ? $invoice->DocTotal : $invoice->DocTotalFC) - $totalFrgnTRIWhse; 
+                                                    $finalTotal = ($originalInvoiceAmount <= 0 ? $invoice->DocTotal : $originalInvoiceAmount) - $totalFrgnTRIWhse;
                                                 }  elseif ($company === 'Triangle Shipments') {
                                                     foreach ($invoice->inv1 as $item) {
                                                         if ($item->WhsCode === 'TRI Whse') {
@@ -420,7 +429,12 @@
                                         </td>
                                             @php
                                             
-                                            $final_amount = $finalTotal - $invoice->PaidFC;
+                                            // $final_amount = $finalTotal - $invoice->PaidFC;
+                                            if ($invoice->PaidSumFc == 0) {
+                                                $final_amount = $finalTotal - $invoice->DpmAmntFC;
+                                            } else {
+                                                $final_amount = $finalTotal - $invoice->PaidSumFc;
+                                            }
                                             $usd = "";
                                             $euro = "";
                                             $php = "";
@@ -429,7 +443,7 @@
                                                     $usd = 25000.00; 
                                                     $final_amount = 25000.00; 
                                                 } else {
-                                                    $usd = number_format($final_amount, 2); // Format regular final amount
+                                                    $usd = number_format($final_amount, 2); 
                                                 }
                                                     $total_usd += $final_amount;
                                                     // $usd = number_format($final_amount, 2);
@@ -1349,16 +1363,23 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
     console.log(company);
     var totalFrgnTRIWhse = 0;
     var finalTotal = 0;
+    var originalInvoiceAmount = 0;
     if (company === 'WHI') {
         if (item.inv1 && Array.isArray(item.inv1)) {
                 item.inv1.forEach(function (subItem) {
                     if (subItem.WhsCode === 'TRI Whse') {
                         totalFrgnTRIWhse += subItem.TotalFrgn;
                     }
+                    if (item.DocType === 'I') {
+                        originalInvoiceAmount += (subItem.Quantity * subItem.Price);
+                    } else {
+                        originalInvoiceAmount += subItem.Price;
+                    }
                 });
             }
             // finalTotal = item.DocTotalFC - totalFrgnTRIWhse;
-            finalTotal = (item.DocTotalFC > 0 ? item.DocTotalFC : item.DocTotal ) - totalFrgnTRIWhse;
+            // finalTotal = (item.DocTotalFC > 0 ? item.DocTotalFC : item.DocTotal ) - totalFrgnTRIWhse;
+            finalTotal = (originalInvoiceAmount > 0 ? originalInvoiceAmount : item.DocTotal ) - totalFrgnTRIWhse;
     } else if (company === 'Triangle Shipments') {
         if (item.inv1 && Array.isArray(item.inv1)) {
                 item.inv1.forEach(function (subItem) {
@@ -1377,7 +1398,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
 
     var formattedFinalTotal = currencySymbol + '' + finalTotal.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         
-    var finalAmount = finalTotal - item.PaidFC;
+    var finalAmount = finalTotal - (item.PaidSumFc == 0 ? item.DpmAmntFC : item.PaidSumFc);
 
     var usd = "";
     var euro = "";
