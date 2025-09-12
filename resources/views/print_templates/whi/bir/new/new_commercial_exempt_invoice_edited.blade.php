@@ -573,7 +573,7 @@
            </tr>
             <tr>
                 <td style="padding: 10px; text-align: center;">
-                   @php
+                   {{-- @php
                        $remarks = optional($details->first())->RemarksTwo;
                    @endphp
            
@@ -596,7 +596,7 @@
                        </table>
                    @else
                        <p></p>
-                   @endif
+                   @endif --}}
                </td>
                <td></td>
                <td></td>
@@ -612,6 +612,35 @@
             </tr> --}}
         </tbody>
     </table>
+</div>
+<div style="position: relative; ">
+    <span style="font-size:12px; position: fixed; ; bottom: 600px; left:500px; width: 30%;">
+        @php
+            $remarks = optional($details->first())->RemarksTwo;
+        @endphp
+           
+        @if($remarks)
+            @php
+                $lines = explode("\n", $remarks); 
+            @endphp
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin: 0 auto;">
+                @foreach($lines as $line)
+                    @php
+                        preg_match('/^(.*?)(USD)?\s*([\d,\.]+)$/', trim($line), $matches);
+                    @endphp
+                    @if(count($matches) === 4)
+                        <tr style="line-height: 10px">
+                            <td style="padding: 5px; text-align: left;">{{ $matches[1] }}</td>
+                            <td style="padding: 5px; text-align: left;">{{ $matches[2] }}</td>
+                            <td style="padding: 5px; text-align: right;">{{ $matches[3] }}</td>
+                        </tr> 
+                    @endif
+                @endforeach
+            </table>
+        @else
+            <p></p>
+        @endif
+    </span>
 </div>
 <div style="position: relative; ">
     <span style="font-size:12px; position: fixed; ; bottom: 725px; width: 60%;">
