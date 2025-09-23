@@ -1349,7 +1349,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
     });
         
     data.forEach(function (item) {
-        var currencySymbol;
+    var currencySymbol;
     if (item.DocCur === "USD") {
         currencySymbol = "$";
     } else if (item.DocCur === "EUR") {
@@ -1367,19 +1367,25 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
     if (company === 'WHI') {
         if (item.inv1 && Array.isArray(item.inv1)) {
                 item.inv1.forEach(function (subItem) {
+                    var totalFrgn = parseFloat(subItem.TotalFrgn) || 0;
+                    var qty = parseFloat(subItem.Quantity) || 0;
+                    var price = parseFloat(subItem.Price) || 0;
                     if (subItem.WhsCode === 'TRI Whse') {
-                        totalFrgnTRIWhse += subItem.TotalFrgn;
+                        totalFrgnTRIWhse += totalFrgn;
                     }
                     if (item.DocType === 'I') {
-                        originalInvoiceAmount += (subItem.Quantity * subItem.Price);
+                        originalInvoiceAmount += (qty * price);
                     } else {
-                        originalInvoiceAmount += subItem.Price;
+                        originalInvoiceAmount += price;
                     }
                 });
             }
             // finalTotal = item.DocTotalFC - totalFrgnTRIWhse;
             // finalTotal = (item.DocTotalFC > 0 ? item.DocTotalFC : item.DocTotal ) - totalFrgnTRIWhse;
-            finalTotal = (originalInvoiceAmount > 0 ? originalInvoiceAmount : item.DocTotal ) - totalFrgnTRIWhse;
+            // finalTotal = (originalInvoiceAmount > 0 ? originalInvoiceAmount : item.DocTotal ) - totalFrgnTRIWhse;
+            finalTotal = (originalInvoiceAmount <= 0 ? item.DocTotal : originalInvoiceAmount) - totalFrgnTRIWhse;
+            var docTotal = parseFloat(item.DocTotal) || 0; 
+            finalTotal = ((originalInvoiceAmount <= 0 ? docTotal : originalInvoiceAmount) - totalFrgnTRIWhse);
     } else if (company === 'Triangle Shipments') {
         if (item.inv1 && Array.isArray(item.inv1)) {
                 item.inv1.forEach(function (subItem) {
