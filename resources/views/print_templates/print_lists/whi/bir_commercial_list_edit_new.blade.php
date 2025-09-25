@@ -12,11 +12,15 @@
           </div>
           <div class="modal-body">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     {{-- @foreach ( $detail->dln1 as $arDetail) --}}
                     <label >Date:</label>
                     <input name="invoice_date" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($detail->asNew)->invoice_date)->format('Y-m-d') }}">
                     {{-- @endforeach --}}
+                </div>
+                <div class="col-md-6">
+                    <label >Invoice Number:</label>
+                    <input name="InvoiceNumber" class="form-control" type="text" value="{{  $detail->asNew->InvoiceNumber }}">
                 </div>
                 <div class="col-md-12">
                     <label >Sold To:</label>

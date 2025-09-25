@@ -30,6 +30,13 @@
             margin-top: 10px;
             font-size: 9px;
         }
+        .invoice_number{
+            position: fixed;
+            color: red;
+            font-size: 22px;
+            top: 68;
+            right: 30;
+        }
         .container {
             padding: 10 50;
         }
@@ -355,7 +362,7 @@
         <div class="right">
             <div  class="line-one">COMMERCIAL</div>
             <div  class="line-one" style="font-size:20px">INVOICE</div>
-            <div class="line-two">Invoice No.</div>
+            <div class="line-two">Invoice No.</div> <div class="invoice_number">{{ optional($details->first())->InvoiceNumber }}</div>
         </div>
     </div>
     <div class="checkboxcon">
@@ -411,7 +418,7 @@
             <div class="info-row">
                 <span class="info-label">Sales Contract No.</span>
                 <span class="info-colon">:</span>
-                <span class="info-value">{{ optional($details->first())->SalesContractNo }}</span>
+                <span class="info-value">{{ optional($details->first())->SalesContract }}</span>
             </div>
         </div>
     </div>

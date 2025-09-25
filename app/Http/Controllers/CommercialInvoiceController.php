@@ -291,6 +291,7 @@ class CommercialInvoiceController extends Controller
         $save_as_new->Currency = $request->Currency;
         $save_as_new->Uom = $request->UnitOfM;
         $save_as_new->PaymentTermManual = $request->PaymentTermManual;
+        $save_as_new->InvoiceNumber = $request->InvoiceNumber;
 
 
         $save_as_new->save();
@@ -363,6 +364,7 @@ class CommercialInvoiceController extends Controller
         $update_saved_invoice->Currency = $request->Currency;
         $update_saved_invoice->Uom = $request->UnitOfM;
         $update_saved_invoice->PaymentTermManual = $request->PaymentTermManual;
+        $update_saved_invoice->InvoiceNumber = $request->InvoiceNumber;
         $update_saved_invoice->update();
         foreach ($request->input('Description') as $index => $description) {
             $productId = $request->product_id[$index];
