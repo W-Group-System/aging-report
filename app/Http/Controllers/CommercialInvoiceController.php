@@ -290,6 +290,7 @@ class CommercialInvoiceController extends Controller
         $save_as_new->RemarksTwo = str_replace('|', "\n", $request->RemarksTwo);
         $save_as_new->Currency = $request->Currency;
         $save_as_new->Uom = $request->UnitOfM;
+        $save_as_new->PaymentTermManual = $request->PaymentTermManual;
 
 
         $save_as_new->save();
@@ -361,8 +362,8 @@ class CommercialInvoiceController extends Controller
         $update_saved_invoice->RemarksTwo = str_replace('|', "\n", $request->RemarksTwo);
         $update_saved_invoice->Currency = $request->Currency;
         $update_saved_invoice->Uom = $request->UnitOfM;
+        $update_saved_invoice->PaymentTermManual = $request->PaymentTermManual;
         $update_saved_invoice->update();
-
         foreach ($request->input('Description') as $index => $description) {
             $productId = $request->product_id[$index];
             $description = str_replace(['@', '|'], [' ', "\n"], $description);
@@ -675,10 +676,14 @@ function edit_print(Request $request, $id){
             $view = 'print_templates.whi.bir.commercial_invoice_edited';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_invoice') {
             $view = 'print_templates.whi.bir.new.new_commercial_invoice_edited';
+        } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_invoice_draft') {
+            $view = 'print_templates.whi.bir.new.new_commercial_invoice_edited_draft';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_commercial_vatable_invoice') {
             $view = 'print_templates.whi.bir.commercial_vatable_invoice_edited';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_vatable_invoice') {
             $view = 'print_templates.whi.bir.new.new_commercial_vatable_invoice_edited';
+        } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_vatable_invoice_draft') {
+            $view = 'print_templates.whi.bir.new.new_commercial_vatable_invoice_edited_draft';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_commercial_exempt_invoice') {
             $view = 'print_templates.whi.bir.commercial_exempt_invoice_edited';
         } elseif (Route::currentRouteName() === 'whi_bir_edited_new_commercial_exempt_invoice') {

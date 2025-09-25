@@ -133,7 +133,11 @@
             </div> 
             <div class="col-md-6">
                 <label>Date of Shipment</label>
-                <input name="DateOfShipment" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($detail->asNew)->DateOfShipment)->format('Y-m-d') }}">
+                <input id="DateOfShipmentEdit{{ $detail->asNew->id }}" name="DateOfShipment" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($detail->asNew)->DateOfShipment)->format('Y-m-d') }}">
+            </div>
+            <div class="col-md-6">
+                <label>Payment Terms</label>
+                <input id="PaymentTermManualEdit{{ $detail->asNew->id }}" name="PaymentTermManual" class="form-control" type="number" value="{{ $detail->asNew->PaymentTermManual }}">
             </div>
             <div class="col-md-6">
                 <label>Port of Loading</label>
@@ -177,7 +181,7 @@
             </div>
             <div class="col-md-6">
                 <label>Invoice Due Date</label>
-                <input name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}">
+                <input id="InvoiceDueDateEdit{{ $detail->asNew->id }}" name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}">
             </div> 
             <div class="row">
                 <div class="col-md-10">
@@ -273,6 +277,27 @@
             button.addEventListener('click', function () {
                 button.closest('.product-row').remove();
             });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const shipmentInput = document.getElementById("DateOfShipmentEdit{{ $detail->asNew->id }}");
+            const paymentInput  = document.getElementById("PaymentTermManualEdit{{ $detail->asNew->id }}");
+            const dueDateInput  = document.getElementById("InvoiceDueDateEdit{{ $detail->asNew->id }}");
+  
+            if (shipmentInput && paymentInput && dueDateInput) {
+                function calculateDueDate() {
+                    let shipmentDate = new Date(shipmentInput.value);
+                    let terms = parseInt(paymentInput.value) || 0;
+
+                    if (!isNaN(shipmentDate.getTime())) {
+                        shipmentDate.setDate(shipmentDate.getDate() + terms);
+                        dueDateInput.value = shipmentDate.toISOString().split('T')[0];
+                    }
+                }
+
+                shipmentInput.addEventListener("change", calculateDueDate);
+                paymentInput.addEventListener("input", calculateDueDate);
+            }
         });
     
     </script>

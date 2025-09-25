@@ -78,7 +78,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/bir_original_new_commercial_exempt_invoice/{invoice_number}', 'CommercialInvoiceController@original_print')->name('bir_original_exempt_new_invoice');
     
     Route::get('/whi_bir_edited_new_commercial_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_invoice');
+    Route::get('/whi_bir_edited_new_commercial_invoice_draft/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_invoice_draft');
     Route::get('/whi_bir_edited_new_commercial_vatable_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_vatable_invoice');
+    Route::get('/whi_bir_edited_new_commercial_vatable_invoice_draft/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_vatable_invoice_draft');
     Route::get('/whi_bir_edited_new_commercial_exempt_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('whi_bir_edited_new_commercial_exempt_invoice');
 
     Route::get('/bir_original_new_unique_commercial_invoice/{invoice_number}', 'CommercialInvoiceController@original_print')->name('bir_original_new_unique_invoice');

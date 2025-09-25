@@ -44,18 +44,26 @@
                     <label>Business Style</label>
                     <input name="BusinessStyle" class="form-control" type="text" value="{{ $detail->asNew->BusinessStyle }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label>Buyer's PO No.</label>
                     <input name="BuyersPo" class="form-control" type="text" value="{{ $detail->asNew->BuyersPo }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label>Buyer's Ref No.</label>
                     <input name="BuyersRef" class="form-control" type="text" value="{{ $detail->asNew->BuyersRef }}">
                 </div>
                 <div class="col-md-4">
+                    <label>BL Date</label>
+                    <input id="DateOfShipment{{ $detail->asNew->id }}" name="DateOfShipment" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($detail->asNew)->DateOfShipment)->format('Y-m-d') }}">
+                </div>
+                <div class="col-md-4">
+                    <label>Terms</label>
+                    <input id="PaymentTermManual{{ $detail->asNew->id }}" name="PaymentTermManual" class="form-control" type="number" value="{{ $detail->asNew->PaymentTermManual }}">
+                </div>
+                <div class="col-md-4">
                     <label>Terms / Due Date</label>
                     {{-- <input name="InvoiceDueDate" class="form-control" type="text" value="{{ \Carbon\Carbon::parse($detail->asNew->InvoiceDueDate)->format('Y-m-d') }}"> --}}
-                    <input name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}">
+                    <input id="InvoiceDueDate{{ $detail->asNew->id }}" name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}">
 
                 </div>
                 <div class="col-md-4">
@@ -434,4 +442,25 @@
             $(this).closest('.col-md-6').prev('.col-md-6').find('.product-code').val(productCode);
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+            const shipmentInput = document.getElementById("DateOfShipment{{ $detail->asNew->id }}");
+            const paymentInput  = document.getElementById("PaymentTermManual{{ $detail->asNew->id }}");
+            const dueDateInput  = document.getElementById("InvoiceDueDate{{ $detail->asNew->id }}");
+  
+            if (shipmentInput && paymentInput && dueDateInput) {
+                function calculateDueDate() {
+                    let shipmentDate = new Date(shipmentInput.value);
+                    let terms = parseInt(paymentInput.value) || 0;
+
+                    if (!isNaN(shipmentDate.getTime())) {
+                        shipmentDate.setDate(shipmentDate.getDate() + terms);
+                        dueDateInput.value = shipmentDate.toISOString().split('T')[0];
+                    }
+                }
+
+                shipmentInput.addEventListener("change", calculateDueDate);
+                paymentInput.addEventListener("input", calculateDueDate);
+            }
+        });
 </script>

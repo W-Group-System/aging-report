@@ -150,7 +150,7 @@
                 </div>
             </div>    
                 <div class="row" id="soaContainerWhi{{ $detail->DocEntry }}">
-                @foreach ( $detail->rdr1 as $product)
+                @foreach ( $detail->relatedProducts()  as $product)
                 <div class="col-md-12 row"><h3 style="font-weight:bold; text-decoration: underline;">Product</h3></div> 
                 
                 <div class="col-md-6">

@@ -1622,49 +1622,96 @@ class PrinController extends Controller
         }
         
         $details = $model->select(
-            'ORDR.DocEntry',
-            'ORDR.DocNum',
             'ORDR.NumAtCard',
-            'ORDR.DocStatus',
-            'ORDR.CardName',
-            'ORDR.PayToCode',
-            'ORDR.Address as Billtoaddress',
-            'ORDR.ShipToCode',
-            'ORDR.Address2 as Shiptoaddress',
-            // 'ORDR.U_Salescontract',
-            'ORDR.DocDueDate',
-            'ORDR.U_BuyersPO',
-            'ORDR.GroupNum',
-            DB::raw($request->is('whi_soa_list') ?  'ORDR.U_SOANum': 'NULL AS U_SOANum'),
-            // 'ORDR.U_SOANum',
-            'ORDR.U_ModeShip',
-            // 'ORDR.U_Inco',
-            DB::raw($request->is('whi_soa_list') ? 'ORDR.U_Delivery' : ($request->is('pbi_soa_list') ? 'ORDR.U_Delivery' : 'NULL AS U_Inco')),
+            DB::raw('MIN(ORDR.DocEntry) as DocEntry'),
+            DB::raw('MIN(ORDR.DocNum) as DocNum'),
+            DB::raw('MAX(ORDR.DocStatus) as DocStatus'),
+            DB::raw('MAX(ORDR.CardName) as CardName'),
+            DB::raw('MAX(ORDR.PayToCode) as PayToCode'),
+            DB::raw('MAX(CAST(ORDR.Address AS NVARCHAR(MAX))) as Billtoaddress'),
+            DB::raw('MAX(ORDR.ShipToCode) as ShipToCode'),
+            DB::raw('MAX(CAST(ORDR.Address2 AS NVARCHAR(MAX))) as Shiptoaddress'),
+            DB::raw('MAX(ORDR.DocDueDate) as DocDueDate'),
+            DB::raw('MAX(CAST(ORDR.U_BuyersPO AS NVARCHAR(MAX))) as U_BuyersPO'),
+            DB::raw('MAX(ORDR.GroupNum) as GroupNum'),
 
-            'ORDR.CANCELED',
-            // 'ORDR.U_SAODueDate',
-            // DB::raw($request->is('whi_soa_list') ?  'ORDR.U_SAODueDate': 'NULL AS U_SOADueDate'),
-            DB::raw($request->is('whi_soa_list') ? 'ORDR.U_SAODueDate' : ($request->is('pbi_soa_list') ? 'ORDR.U_SOADueDate' : 'NULL AS U_SAODueDate')),
-            DB::raw($request->is('whi_soa_list') ? 'ORDR.U_PortLoad' : ($request->is('pbi_soa_list') ? 'ORDR.U_PlaceLoading' : 'NULL AS U_PortLoad')),
-            // DB::raw($request->is('whi_soa_list') ?  'ORDR.U_PortLoad': 'NULL AS U_PortLoad'),
-            // 'ORDR.U_PortLoad',
-            // 'ORDR.GroupNum','g.U_T1',
-            DB::raw($request->is('whi_soa_list') ? 'ORDR.U_TaxID' : ($request->is('pbi_soa_list') ? 'ORDR.U_TaxID' : 'NULL AS U_TaxID')),
+            DB::raw(
+                $request->is('whi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_SOANum AS NVARCHAR(MAX))) AS U_SOANum'
+                    : 'NULL AS U_SOANum'
+            ),
 
-            // DB::raw($request->is('pbi_soa_list') ?  'ORDR.U_TaxID': 'NULL AS U_TaxID'),
-            // DB::raw($request->is('pbi_soa_list') ?  'ORDR.U_Salescontract': 'NULL AS U_Salescontract'),
-            DB::raw($request->is('pbi_soa_list') ? 'ORDR.U_Salescontract' : 'ORDR.U_Salescontract'),
-            DB::raw($request->is('pbi_soa_list') ?  'ORDR.U_Remarks1': 'NULL AS U_Remarks1'),
-            DB::raw($request->is('pbi_soa_list') ?  'ORDR.U_Remarks2': 'NULL AS U_Remarks2'),
-            DB::raw($request->is('pbi_soa_list') ?  'ORDR.U_Remarks3': 'NULL AS U_Remarks3'),
 
-            'g.U_T1',
-            'g.U_T2',
-            'g.U_T3',
-            'g.U_T4',
-            'g.U_T5',
-            'g.U_T6'
-            
+            DB::raw('MAX(CAST(ORDR.U_ModeShip AS NVARCHAR(MAX))) as U_ModeShip'),
+
+            DB::raw(
+            $request->is('whi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_Delivery AS NVARCHAR(MAX))) AS U_Delivery'
+                    : ($request->is('pbi_soa_list')
+                        ? 'MAX(CAST(ORDR.U_Delivery AS NVARCHAR(MAX))) AS U_Delivery'
+                        : 'NULL AS U_Inco'
+                    )
+            ),
+
+            DB::raw('MAX(ORDR.CANCELED) as CANCELED'),
+
+            DB::raw(
+                $request->is('whi_soa_list')
+                    ? 'MAX(ORDR.U_SAODueDate) AS U_SAODueDate'
+                    : ($request->is('pbi_soa_list')
+                        ? 'MAX(ORDR.U_SOADueDate) AS U_SAODueDate'
+                        : 'NULL AS U_SAODueDate'
+                    )
+            ),
+
+
+            DB::raw(
+                $request->is('whi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_PortLoad AS NVARCHAR(MAX))) AS U_PortLoad'
+                    : ($request->is('pbi_soa_list')
+                        ? 'MAX(CAST(ORDR.U_PlaceLoading AS NVARCHAR(MAX))) AS U_PortLoad'
+                        : 'NULL AS U_PortLoad'
+                    )
+            ),
+
+            DB::raw(
+                $request->is('whi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_TaxID AS NVARCHAR(MAX))) AS U_TaxID'
+                    : ($request->is('pbi_soa_list')
+                        ? 'MAX(CAST(ORDR.U_TaxID AS NVARCHAR(MAX))) AS U_TaxID'
+                        : 'NULL AS U_TaxID'
+                    )
+            ),
+
+
+            DB::raw('MAX(CAST(ORDR.U_Salescontract AS NVARCHAR(MAX))) as U_Salescontract'),
+
+            DB::raw(
+                $request->is('pbi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_Remarks1 AS NVARCHAR(MAX))) AS U_Remarks1'
+                    : 'NULL AS U_Remarks1'
+            ),
+
+            DB::raw(
+                $request->is('pbi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_Remarks2 AS NVARCHAR(MAX))) AS U_Remarks2'
+                    : 'NULL AS U_Remarks2'
+            ),
+
+            DB::raw(
+                $request->is('pbi_soa_list')
+                    ? 'MAX(CAST(ORDR.U_Remarks3 AS NVARCHAR(MAX))) AS U_Remarks3'
+                    : 'NULL AS U_Remarks3'
+            ),
+
+
+            DB::raw('MAX(g.U_T1) as U_T1'),
+            DB::raw('MAX(g.U_T2) as U_T2'),
+            DB::raw('MAX(g.U_T3) as U_T3'),
+            DB::raw('MAX(g.U_T4) as U_T4'),
+            DB::raw('MAX(g.U_T5) as U_T5'),
+            DB::raw('MAX(g.U_T6) as U_T6')
+                    
         )
         ->when($search, function ($query) use ($search, $request) {
             $terms = explode(' ', $search);
@@ -1681,7 +1728,7 @@ class PrinController extends Controller
         })   
         ->where('CANCELED' ,'!=', 'Y' )
         ->where('NumAtCard' ,'!=', '' )
-        
+        ->groupBy('NumAtCard')
         ->paginate(15);
         return view($view, 
             array(

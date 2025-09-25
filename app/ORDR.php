@@ -21,4 +21,25 @@ class ORDR extends Model
     {
         return $this->hasOne(StatementOfAccount::class, 'DocNum', 'DocEntry');
     }
+    public function relatedProducts()
+{
+    return RDR1::query()
+        ->select('RDR1.*')
+        ->whereIn('RDR1.DocEntry', function ($query) {
+            $query->select('o2.DocEntry')
+                ->from('ORDR as o1')
+                ->join('ORDR as o2', 'o2.NumAtCard', '=', 'o1.NumAtCard')
+                ->where('o1.DocEntry', $this->DocEntry);
+        })
+        ->get();
+}
+
+
+
+
+
+
+
+
+
 }

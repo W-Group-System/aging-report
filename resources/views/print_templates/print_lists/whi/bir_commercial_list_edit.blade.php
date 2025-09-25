@@ -172,10 +172,14 @@
                 </div>
             </div>    
             <div class="col-md-6">
-                @foreach ( $detail->dln1 as $arDetail)
+                {{-- @foreach ( $detail->dln1 as $arDetail) --}}
                     <label>Date of Shipment</label>
-                    <input name="DateOfShipment" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($detail)->U_BaseDate)->format('Y-m-d') }}">          
-                @endforeach
+                    <input id="DateOfShipment{{ $detail->DocEntry }}" name="DateOfShipment" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($detail)->U_BaseDate)->format('Y-m-d') }}">          
+                {{-- @endforeach --}}
+            </div>
+            <div class="col-md-6">
+                <label>Payment Terms</label>
+                <input id="PaymentTermManual{{ $detail->DocEntry }}" name="PaymentTermManual" class="form-control" type="number" value="">
             </div>
             <div class="col-md-6">
                 <label>Port of Loading</label>
@@ -220,7 +224,7 @@
             <div class="col-md-6">
                 @foreach ( $detail->dln1 as $arDetail)
                     <label>Invoice Due Date</label>
-                    <input name="InvoiceDueDate" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($arDetail->oinvWhi)->DocDueDate)->format('Y-m-d')}}">
+                    <input id="InvoiceDueDate{{ $detail->DocEntry }}" name="InvoiceDueDate" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($arDetail->oinvWhi)->DocDueDate)->format('Y-m-d')}}">
                 @endforeach
             </div>
             <div class="row">
@@ -313,11 +317,31 @@
             });
         });
 
-        // Attach delete functionality to existing rows
         document.querySelectorAll('.delete-row').forEach((button) => {
             button.addEventListener('click', function () {
                 button.closest('.product-row').remove();
             });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const shipmentInput = document.getElementById("DateOfShipment{{ $detail->DocEntry }}");
+            const paymentInput  = document.getElementById("PaymentTermManual{{ $detail->DocEntry }}");
+            const dueDateInput  = document.getElementById("InvoiceDueDate{{ $detail->DocEntry }}");
+  
+            if (shipmentInput && paymentInput && dueDateInput) {
+                function calculateDueDate() {
+                    let shipmentDate = new Date(shipmentInput.value);
+                    let terms = parseInt(paymentInput.value) || 0;
+
+                    if (!isNaN(shipmentDate.getTime())) {
+                        shipmentDate.setDate(shipmentDate.getDate() + terms);
+                        dueDateInput.value = shipmentDate.toISOString().split('T')[0];
+                    }
+                }
+
+                shipmentInput.addEventListener("change", calculateDueDate);
+                paymentInput.addEventListener("input", calculateDueDate);
+            }
         });
 
     </script>
