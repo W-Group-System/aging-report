@@ -35,7 +35,7 @@
             color: red;
             font-size: 22px;
             top: 68;
-            right: 30;
+            left: 420;
         }
         .container {
             padding: 10 50;
@@ -63,7 +63,7 @@
             text-align: center;
         }
         .header-container .right .line-two {
-            margin-top: 60px;
+            margin-top: 55px;
             margin-right: 200px;
             font-size: 12px;
         }
@@ -361,7 +361,7 @@
         </div>
         <div class="right">
             <div  class="line-one">COMMERCIAL</div>
-            <div  class="line-one" style="font-size:20px">INVOICE</div>
+            <div  class="line-one" style="font-size:22px">INVOICE</div>
             <div class="line-two">Invoice No.</div> <div class="invoice_number">{{ optional($details->first())->InvoiceNumber }}</div>
         </div>
     </div>
