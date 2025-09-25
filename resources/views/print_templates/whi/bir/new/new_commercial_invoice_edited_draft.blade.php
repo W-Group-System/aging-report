@@ -380,7 +380,7 @@
             <tbody>
                 <tr>
                     <th>Date</th>
-                    <th>{{ \Carbon\Carbon::parse(optional($details->first())->invoice_date)->format('F j, Y') }}</th>
+                    <th style="font-weight: normal;">{{ \Carbon\Carbon::parse(optional($details->first())->invoice_date)->format('F j, Y') }}</th>
                 </tr>
             </tbody>
         </table>
