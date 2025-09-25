@@ -292,7 +292,7 @@ class CommercialInvoiceController extends Controller
         $save_as_new->Uom = $request->UnitOfM;
         $save_as_new->PaymentTermManual = $request->PaymentTermManual;
         $save_as_new->InvoiceNumber = $request->InvoiceNumber;
-
+        $save_as_new->NoDate = $request->NoDate;
 
         $save_as_new->save();
         foreach ($request->input('Description') as $index => $description) {
@@ -365,6 +365,7 @@ class CommercialInvoiceController extends Controller
         $update_saved_invoice->Uom = $request->UnitOfM;
         $update_saved_invoice->PaymentTermManual = $request->PaymentTermManual;
         $update_saved_invoice->InvoiceNumber = $request->InvoiceNumber;
+        $update_saved_invoice->NoDate = $request->NoDate;
         $update_saved_invoice->update();
         foreach ($request->input('Description') as $index => $description) {
             $productId = $request->product_id[$index];
@@ -910,6 +911,7 @@ function save_as_new_invoice_ccc(Request $request) {
     $save_as_new->SealNo = $request->SealNo;
     $save_as_new->TermsOfPayment = $request->TermOfPayment;
     $save_as_new->InvoiceDueDate = $request->InvoiceDueDate;
+    
 
     $save_as_new->save();
     foreach ($request->Description as $index => $description) {

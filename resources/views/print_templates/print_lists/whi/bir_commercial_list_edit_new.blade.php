@@ -19,10 +19,14 @@
                     {{-- @endforeach --}}
                 </div>
                 <div class="col-md-6">
+                    <label >Tentative Date:</label>
+                    <input name="NoDate" class="form-control" type="text" value="{{  $detail->asNew->NoDate }}">
+                </div>
+                <div class="col-md-6">
                     <label >Invoice Number:</label>
                     <input name="InvoiceNumber" class="form-control" type="text" value="{{  $detail->asNew->InvoiceNumber }}">
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <label >Sold To:</label>
                     <input name="Client" class="form-control" type="text" value="{{  $detail->asNew->SoldTo }}">
                 </div>

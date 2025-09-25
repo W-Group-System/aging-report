@@ -546,7 +546,12 @@
                 <div class="info-row">
                     <span class="info-name">Date of Shipment</span>
                     <span class="info-colon">:</span>
-                    <span class="info-detail">{{ \Carbon\Carbon::parse(optional($details->first())->DateOfShipment)->format('F j, Y') }}</span>
+                    <span class="info-detail">
+                        @if ($details->first()->NoDate !== null)
+                            {{ $details->first()->NoDate }}
+                        @else
+                            {{ \Carbon\Carbon::parse(optional($details->first())->DateOfShipment)->format('F j, Y') }}
+                        @endif </span>
                 </div>
                 <div class="info-row">
                     <span class="info-name">Port of Loading</span>
