@@ -690,7 +690,7 @@
             <div class="signature-block">
                 <div class="esign" style="margin-bottom: -10px;">
                     <img src="{{ asset('/images/john_signature.png')}}" 
-                    style="width: 80px; height: auto;">
+                    style="width: 100px; height: auto;">
                 </div>
                 <span class="signature-name">JOHN L. WEE</span>
                 <div class="signature-label">Authorized Signature</div>
