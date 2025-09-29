@@ -194,7 +194,7 @@
             border-top: none;           
             text-align: center;
         }
-        .product-details th:first-child, {
+        .product-details th:first-child {
             border-left: none; 
         }
         .product-details th:last-child {

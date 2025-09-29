@@ -695,14 +695,22 @@ function edit_print(Request $request, $id){
             $view = 'print_templates.ccc.bir.commercial_invoice_edited';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_invoice') {
             $view = 'print_templates.pbi.bir.commercial_invoice_edited';
+        }elseif (Route::currentRouteName() === 'pbi_bir_edited_new_commercial_invoice_draft') {
+            $view = 'print_templates.pbi.bir.commercial_invoice_edited_draft';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_vatable_invoice') {
             $view = 'print_templates.pbi.bir.commercial_vatable_invoice_edited';
+        }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_vatable_invoice_draft') {
+            $view = 'print_templates.pbi.bir.commercial_vatable_invoice_edited_draft';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_exempt_invoice') {
             $view = 'print_templates.pbi.bir.commercial_exempt_invoice_edited';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_invoice_special') {
             $view = 'print_templates.pbi.bir.commercial_invoice_edited_special';
+        }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_invoice_special_draft') {
+            $view = 'print_templates.pbi.bir.commercial_invoice_edited_special_draft';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_vatable_invoice_special') {
             $view = 'print_templates.pbi.bir.commercial_vatable_invoice_edited_special';
+        }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_vatable_invoice_special_draft') {
+            $view = 'print_templates.pbi.bir.commercial_vatable_invoice_edited_special_draft';
         }elseif (Route::currentRouteName() === 'pbi_bir_edited_commercial_exempt_invoice_special') {
             $view = 'print_templates.pbi.bir.commercial_exempt_invoice_edited_special';
         } else {

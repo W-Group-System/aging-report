@@ -16,9 +16,13 @@
                 {{-- <div class="col-md-12">
                     <input name="DocEntry" class="form-control" type="text" value="{{ $detail->asNew->DocEntry }}">
                 </div> --}}
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <label >Date:</label>
                     <input name="invoice_date" class="form-control" type="date" value="{{ \Carbon\Carbon::parse($detail->asNew->invoice_date)->format('Y-m-d') }}">
+                </div>
+                <div class="col-md-6">
+                    <label >Invoice Number:</label>
+                    <input name="InvoiceNumber" class="form-control" type="text" value="{{ $detail->asNew->InvoiceNumber }}">
                 </div>
                 {{-- <div class="col-md-12">
                     <label >Sold To:</label>

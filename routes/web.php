@@ -115,14 +115,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/pbi_bir_original_commercial_vatable_invoice/{invoice_number}', 'CommercialInvoiceController@pbi_original_print')->name('pbi_bir_original_commercial_vatable_invoice');
     Route::get('/pbi_bir_original_commercial_exempt_invoice/{invoice_number}', 'CommercialInvoiceController@pbi_original_print')->name('pbi_bir_original_commercial_exempt_invoice');
     Route::get('/pbi_bir_edited_commercial_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_invoice');
+    Route::get('/pbi_bir_edited_new_commercial_invoice_draft/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_new_commercial_invoice_draft');
     Route::get('/pbi_bir_edited_commercial_vatable_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_vatable_invoice');
+    Route::get('/pbi_bir_edited_commercial_vatable_invoice_draft/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_vatable_invoice_draft');
     Route::get('/pbi_bir_edited_commercial_exempt_invoice/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_exempt_invoice');
     Route::post('/pbi_save_as_new_invoice', 'CommercialInvoiceController@save_as_new_invoice');
     Route::post('/pbi_edit_new_invoice/{id}', 'CommercialInvoiceController@edit_new_invoice');
     Route::delete('/delete-product/{id}', 'CommercialInvoiceController@deleteProduct');
     Route::get('/pbi_bir_invoice_special', 'CommercialInvoiceController@index_special');
     Route::get('/pbi_bir_edited_commercial_invoice_special/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_invoice_special');
+    Route::get('/pbi_bir_edited_commercial_invoice_special_draft/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_invoice_special_draft');
     Route::get('/pbi_bir_edited_commercial_vatable_invoice_special/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_vatable_invoice_special');
+    Route::get('/pbi_bir_edited_commercial_vatable_invoice_special_draft/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_vatable_invoice_special_draft');
     Route::get('/pbi_bir_edited_commercial_exempt_invoice_special/{DocNum}', 'CommercialInvoiceController@edit_print')->name('pbi_bir_edited_commercial_exempt_invoice_special');
 
 

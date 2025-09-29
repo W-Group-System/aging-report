@@ -66,8 +66,9 @@
                                                 @if ($detail->asNew)
                                                     <button onclick="" type="button" class="btn btn-primary btn-outline" title="Edit Invoice" data-toggle="modal" data-target="#pbiBirCommercialEditNew{{ $detail->asNew->id }}" ><i class="fa fa fa-pencil"></i></button>
                                                     @include('print_templates.print_lists.pbi.bir_commercial_list_edit_new')
-                                                <a target='_blank' href="{{ url('pbi_bir_edited_commercial_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
-                                                <button type="button" class="btn btn-primary btn-danger" onclick="deleteInvoice({{ $detail->asNew->id }})"><i class="fa fa-sharp fa-trash"></i></button>
+                                                    <a target='_blank' href="{{ url('pbi_bir_edited_commercial_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('pbi_bir_edited_new_commercial_invoice_draft', $detail->asNew->id) }}" class="btn btn-primary btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <button type="button" class="btn btn-primary btn-danger" onclick="deleteInvoice({{ $detail->asNew->id }})"><i class="fa fa-sharp fa-trash"></i></button>
                                                     <form id="delete-pbi-ci{{ $detail->asNew->id }}" action="{{ url('deletePbiCi/' . $detail->asNew->id) }}" method="GET" style="display: none;">
                                                         @csrf
                                                         @method('DELETE')
@@ -80,16 +81,17 @@
                                             </td>
                                             <td>
                                                 @if ($detail->asNew)
-                                                <a target='_blank' href="{{ url('pbi_bir_edited_commercial_vatable_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('pbi_bir_edited_commercial_vatable_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('pbi_bir_edited_commercial_vatable_invoice_draft', $detail->asNew->id) }}" class="btn btn-primary btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                 @else 
-                                                <a target='_blank' href="{{ url('pbi_bir_original_commercial_vatable_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('pbi_bir_original_commercial_vatable_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
                                                 @endif
                                             </td> 
                                             <td>
                                                 @if ($detail->asNew)
-                                                <a target='_blank' href="{{ url('pbi_bir_edited_commercial_exempt_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('pbi_bir_edited_commercial_exempt_invoice', $detail->asNew->id) }}" class="btn btn-warning btn-outline" > <i class="fa fa-sharp fa-print"></i></a>
                                                 @else 
-                                                <a target='_blank' href="{{ url('pbi_bir_original_commercial_exempt_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
+                                                    <a target='_blank' href="{{ url('pbi_bir_original_commercial_exempt_invoice', $detail->DocEntry) }}" class="btn btn-danger btn-outline" > <i class="fa fa-solid fa-print"></i></a>
                                                 @endif
                                             </td>       
                                             {{-- <td>{{ $detail->U_invNo }}</td> --}}
