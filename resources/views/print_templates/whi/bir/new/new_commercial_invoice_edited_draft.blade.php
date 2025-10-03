@@ -689,8 +689,10 @@
 
             <div class="signature-block">
                 <div class="esign" style="margin-bottom: -10px;">
-                    <img src="{{ asset('/images/john_signature.png')}}" 
-                    style="width: 100px; height: auto;">
+                    @if (optional($details->first())->ShowSignature)
+                        <img src="{{ asset('/images/john_signature.png')}}" 
+                        style="width: 100px; height: auto;">
+                    @endif
                 </div>
                 <span class="signature-name">JOHN L. WEE</span>
                 <div class="signature-label">Authorized Signature</div>

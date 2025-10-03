@@ -191,6 +191,13 @@
                 <label>Invoice Due Date</label>
                 <input id="InvoiceDueDateEdit{{ $detail->asNew->id }}" name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}">
             </div> 
+            <div class="col-md-6" style="margin-top:20px">
+                <input type="checkbox" name="ShowSignature" class="form-check-input" value="{{ $detail->asNew->ShowSignature }}" 
+                    {{ $detail->asNew->ShowSignature == 1 ? 'checked' : '' }}>
+                <label class="form-check-label" for="ShowSignature">
+                    Show Signature
+                </label>
+            </div> 
             <div class="row">
                 <div class="col-md-10">
                     <label for="">PHREX</label>

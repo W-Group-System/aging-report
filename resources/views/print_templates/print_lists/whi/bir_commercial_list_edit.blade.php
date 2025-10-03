@@ -235,6 +235,12 @@
                     <input id="InvoiceDueDate{{ $detail->DocEntry }}" name="InvoiceDueDate" class="form-control" type="date" value="{{ \Carbon\Carbon::parse(optional($arDetail->oinvWhi)->DocDueDate)->format('Y-m-d')}}">
                 @endforeach
             </div>
+            <div class="col-md-6">
+                <input type="checkbox" name="ShowSignature" class="form-check-input" value="1" checked>
+                <label class="form-check-label" for="ShowSignature">
+                    Show
+                </label>
+            </div>
             <div class="row">
                 <div class="col-md-10">
                     <label for="">PHREX</label>

@@ -645,8 +645,10 @@
                   <td class="">
                     Prepared by <br> <br>
                     <div class="esign" style="margin-bottom: -10px; margin-top: -15px;">
+                        @if (optional($details->first())->ShowSignature)
                        <img src="{{ asset('/images/esign/lovely_esign.png')}}" 
                         style="width: 60px; height: auto;">
+                        @endif
                     </div>
                     <span>L. Crispin</span> <br> <br>
                     {{-- <span>{{ $initial }} {{ $lastName }}</span> <br> <br> --}}
@@ -655,8 +657,10 @@
                   <td class=""></td>
                   <td class="">Approved by <br> <br> <br>
                     <div class="esign" style="margin-bottom: -20px; margin-top: -15px;">
+                        @if (optional($details->first())->ShowSignature)
                        <img src="{{ asset('/images/esign/josephine_esign.png')}}" 
                         style="width: 60px; height: auto;">
+                        @endif
                     </div>
                     <span>J. Galera</span> <br> <br>
                 </td>

@@ -274,6 +274,7 @@ class CommercialInvoiceController extends Controller
         $save_as_new->PaymentInstruction = $request->PaymentInstruction;
         $save_as_new->Phrex = $request->Phrex;
         $save_as_new->ShowPhrex = $request->ShowPhrex;
+        $save_as_new->ShowSignature = $request->ShowSignature;
         $save_as_new->DateOfShipment = $request->DateOfShipment;
         $save_as_new->PortOfLoading = $request->PortOfLoading;
         $save_as_new->PortOfDestination = $request->PortOfDestination;
@@ -346,6 +347,7 @@ class CommercialInvoiceController extends Controller
         $update_saved_invoice->PaymentInstruction = $request->PaymentInstruction;
         $update_saved_invoice->Phrex = $request->Phrex;
         $update_saved_invoice->ShowPhrex = $request->has('ShowPhrex') ? 1 : 0;
+        $update_saved_invoice->ShowSignature = $request->has('ShowSignature') ? 1 : 0;
         $update_saved_invoice->DateOfShipment = $request->DateOfShipment;
         $update_saved_invoice->PortOfLoading = $request->PortOfLoading;
         $update_saved_invoice->PortOfDestination = $request->PortOfDestination;
