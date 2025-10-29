@@ -180,11 +180,11 @@
         }
         .middle-table .label-column{
             text-align: left;
-            width: 30%;
+            width: 25%;
         }
         .middle-table .value-column {
-            width: 10%;
-
+            width: 15%;
+            text-align: center;
         }
         .bottom-table{
             width: 100%;
@@ -384,7 +384,7 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td>{{ $detail->Uom }}</td>
+                        <td>{{ strtoupper($detail->Uom) }}</td>
                         <td>{{ $detail->Currency }}</td>
                         <td>{{ $detail->Currency }}</td>    
                     </tr>
@@ -406,7 +406,7 @@
                     @endphp
                 
                     <tr>
-                        <td style="text-align: left;">{{ $product->ProductCode }}</td>
+                        <td style="text-align: center;">{{ $product->ProductCode }}</td>
                         <td style="text-align: left;">{{ $product->Description }}</td>
                         <td>{{ $product->Quantity !== null && $product->Quantity != 0 ? number_format($product->Quantity, 2) : '' }}</td>
                         <td>{{ $product->UnitPrice !== null && $product->UnitPrice != 0 ? number_format($product->UnitPrice, 2) : '' }}</td>
@@ -466,7 +466,7 @@
                     <td></td>
                     <td></td>
                     <td class="label-column">VAT Zero Rated Sales</td>
-                    <td class="value-column">{{ (number_format($total,2)) }}</td>
+                    <td class="value-column">{{ $details->first()->Currency }} {{ (number_format($total,2)) }}</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -484,7 +484,7 @@
                     <td></td>
                     <td></td>
                     <td class="label-column">Total Amount Payable</td>
-                    <td class="value-column">{{ (number_format($total,2)) }}</td>
+                    <td class="value-column">{{ $details->first()->Currency }} {{ (number_format($total,2)) }}</td>
                 </tr>
                 {{-- @elseif ($details->first()->Type == 'vatable')
                 <tr>
@@ -563,7 +563,7 @@
             </tbody>
         </table>
         <div style="position: relative; ">
-            <p style="font-size:13px; font-weight: bold; position: fixed; left: 280px; bottom: 250px;">VAT ZERO-RATED</p>
+            <p style="font-size:13px; font-weight: bold; position: fixed; left: 220px; bottom: 250px;">VAT ZERO-RATED</p>
             <p style="font-size:10px; position: fixed; margin-left: 20px; bottom: 280px;">Packaging Code: P52</p>
         </div>
         <table class="bottom-table"  style="margin-top:0; border-top:none;">
