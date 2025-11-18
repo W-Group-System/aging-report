@@ -344,15 +344,14 @@
                         <td>{{ number_format($vatable_amount,2) }}</td>
                     </tr>
                 @endif
-                <tr >
-                    <td></td>
-                    <td style="text-align: left">{!! nl2br(e(optional($details->first())->Remarks)) !!}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
                 @endforeach
-              
+                    <tr >
+                        <td></td>
+                        <td style="text-align: left">{!! nl2br(e(optional($details->first())->Remarks)) !!}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
               </tbody>
               @endforeach
           </table>
