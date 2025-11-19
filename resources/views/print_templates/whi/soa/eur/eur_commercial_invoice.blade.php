@@ -355,7 +355,9 @@
             <div style="font-size: 11px;">VAT Reg. TIN 225-688-438-0000</div>
         </div>
     </div>
-    
+    <div class="logo">
+        <img src="{{ asset('/images/w-logo.png') }}" alt="" width="80px" style="position:fixed; top: 25px; right:180px;">
+    </div>
     <div class="right">
         <div class="container">
             <div class="line-two">

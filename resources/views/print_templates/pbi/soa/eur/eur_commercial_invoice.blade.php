@@ -353,6 +353,9 @@
     <div class="middle">
        
     </div>
+    <div class="logo">
+        <img src="{{ asset('/images/pbi_logo.webp') }}" alt="" width="75px" style="position:fixed; top: 20px; right:250px;">
+    </div>
     
     <div class="right">
         <div class="container">
