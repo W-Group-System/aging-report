@@ -378,6 +378,8 @@
                                                         }
                                                         if ($invoice->DocType === 'I') {
                                                             $originalInvoiceAmount += ($item->Quantity * $item->Price);
+                                                        } elseif ($invoice->DocType === 'S') {
+                                                            $originalInvoiceAmount += ($item->TotalFrgn);
                                                         } else {
                                                              $originalInvoiceAmount += ($item->Price);
                                                         }
@@ -1375,6 +1377,8 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
                     }
                     if (item.DocType === 'I') {
                         originalInvoiceAmount += (qty * price);
+                    } if (item.DocType === 'S') {
+                        originalInvoiceAmount += (totalFrgn);
                     } else {
                         originalInvoiceAmount += price;
                     }
