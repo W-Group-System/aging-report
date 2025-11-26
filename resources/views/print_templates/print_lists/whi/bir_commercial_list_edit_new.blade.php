@@ -67,53 +67,65 @@
                     <input name="ScPwd" class="form-control" type="text" value="{{  $detail->asNew->ScPwd }}">
                 </div> --}}
             </div>      
+            <input type="hidden" name="deleted_products" id="deleted_products">
             <div class="row" id="productContainerEdit{{ $detail->asNew->id }}">
-            @foreach (  $detail->asNew->products as $product)
-            <div class="col-md-12 row"><h3 style="font-weight:bold; text-decoration: underline;">Product</h5></div> 
-            <div class="col-md-12">
-                <input name="product_id[]" class="form-control" type="hidden" value="{{  $product->id }}">
-            </div>
-            <div class="col-md-4">
-                <label>Description</label>
-                <input name="Description[]" class="form-control" type="text" value="{{ $product->Description }}">
-            </div>
-            <div class="col-md-4">
-                <label>Supplier Code</label>
-                <input name="SupplierCode[]" class="form-control" type="text" value="{{ $product->SupplierCode }}">
-            </div>
-            <div class="col-md-1">
-                <label>Cur</label>
-                <input name="DocCur[]" class="form-control" type="text" value="{{ $detail->DocCur }}">
-            </div>
-            <div class="col-md-2">
-                <label>Pkg</label>
-                <input name="Packing[]" class="form-control" type="text" value="{{ $product->Packing }}">
-            </div>
-            <div class="col-md-1">
-                <label>UoM</label>
-                <input name="Uom[]" class="form-control" type="text" value="{{ $product->Uom }}">
-            </div>
-            <div class="col-md-2">
-                <label>Unit</label>
-                {{-- <input class="form-control" name="Unit[]"type="text" value="{{ !empty($product->Quantity) && !empty($product->Packing) && $product->Packing != 0 ? number_format($product->Quantity / $product->Packing, 2) : '' }}"> --}}
-                <input class="form-control" name="Unit[]"type="text" value="{{ $product->Unit}}">
-            </div>
-            <div class="col-md-1">
-                <label>UoM</label>
-                <input class="form-control" name="printUom[]" type="text" value="{{ $product->printUom}}">
-            </div>
-            <div class="col-md-3">
-                <label>Quantity</label>
-                <input class="form-control" name="Quantity[]" type="text" value="{{ number_format($product->Quantity,2) }}">
-            </div>
-            <div class="col-md-2">
-                <label>Unit Price</label>
-                <input class="form-control" type="text" name="UnitPrice[]" value="{{ $product->UnitPrice}}">
-            </div>
-            <div class="col-md-4">
-                <label>Amount</label>
-                <input class="form-control" name="Amount[]" type="text" value="{{ number_format($product->Amount, 2) }}" >
-            </div>
+            @foreach ($detail->asNew->products as $index => $product)
+                <div class="product-row row col-md-12 mb-3" id="product_row_{{ $index }}">
+                   <div class="col-md-12 d-flex justify-content-between align-items-center">
+                    <h3 style="font-weight:bold; text-decoration: underline;">Product</h3>
+
+                    <button type="button"
+                            class="btn btn-danger btn-sm deleteProductBtn"
+                            data-id="{{ $product->id }}"
+                            data-index="{{ $index }}">
+                        Delete
+                    </button>
+                </div>
+                <div class="col-md-12">
+                    <input name="product_id[]" class="form-control" type="hidden" value="{{  $product->id }}">
+                </div>
+                <div class="col-md-4">
+                    <label>Description</label>
+                    <input name="Description[]" class="form-control" type="text" value="{{ $product->Description }}">
+                </div>
+                <div class="col-md-4">
+                    <label>Supplier Code</label>
+                    <input name="SupplierCode[]" class="form-control" type="text" value="{{ $product->SupplierCode }}">
+                </div>
+                <div class="col-md-1">
+                    <label>Cur</label>
+                    <input name="DocCur[]" class="form-control" type="text" value="{{ $detail->DocCur }}">
+                </div>
+                <div class="col-md-2">
+                    <label>Pkg</label>
+                    <input name="Packing[]" class="form-control" type="text" value="{{ $product->Packing }}">
+                </div>
+                <div class="col-md-1">
+                    <label>UoM</label>
+                    <input name="Uom[]" class="form-control" type="text" value="{{ $product->Uom }}">
+                </div>
+                <div class="col-md-2">
+                    <label>Unit</label>
+                    {{-- <input class="form-control" name="Unit[]"type="text" value="{{ !empty($product->Quantity) && !empty($product->Packing) && $product->Packing != 0 ? number_format($product->Quantity / $product->Packing, 2) : '' }}"> --}}
+                    <input class="form-control" name="Unit[]"type="text" value="{{ $product->Unit}}">
+                </div>
+                <div class="col-md-1">
+                    <label>UoM</label>
+                    <input class="form-control" name="printUom[]" type="text" value="{{ $product->printUom}}">
+                </div>
+                <div class="col-md-3">
+                    <label>Quantity</label>
+                    <input class="form-control" name="Quantity[]" type="text" value="{{ number_format($product->Quantity,2) }}">
+                </div>
+                <div class="col-md-2">
+                    <label>Unit Price</label>
+                    <input class="form-control" type="text" name="UnitPrice[]" value="{{ $product->UnitPrice}}">
+                </div>
+                <div class="col-md-4">
+                    <label>Amount</label>
+                    <input class="form-control" name="Amount[]" type="text" value="{{ number_format($product->Amount, 2) }}" >
+                </div>
+                </div>
             @endforeach
         </div>
         <div class="col-md-12 mt-3" style="padding: 20px;">
@@ -312,6 +324,24 @@
 
                 shipmentInput.addEventListener("change", calculateDueDate);
                 paymentInput.addEventListener("input", calculateDueDate);
+            }
+        });
+
+        let deletedProducts = [];
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('deleteProductBtn')) {
+
+                let id = e.target.dataset.id;
+                let index = e.target.dataset.index;
+
+                document.getElementById("product_row_" + index).remove();
+
+                if (id) {
+                    deletedProducts.push(id);
+                }
+
+                document.getElementById('deleted_products').value = JSON.stringify(deletedProducts);
             }
         });
     

@@ -379,6 +379,10 @@ class CommercialInvoiceController extends Controller
                 $save_as_product = new BirInvoiceProduct();
                 $save_as_product->DocNum = $update_saved_invoice->id; 
             }
+            if ($request->deleted_products) {
+                $toDelete = json_decode($request->deleted_products, true);
+                BirInvoiceProduct::whereIn('id', $toDelete)->delete();
+            }
     
             $save_as_product->Description = $description ?? null;
             $save_as_product->SupplierCode = $request->SupplierCode[$index] ?? null;
