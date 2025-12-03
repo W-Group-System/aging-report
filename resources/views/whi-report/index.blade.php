@@ -368,6 +368,7 @@
 
                                                 // $finalTotal = $invoice->DocTotalFC - $totalFrgnTRIWhse;
 
+                                                $pbi_invoice = 0;
                                                 $totalFrgnTRIWhse = 0;
                                                 $originalInvoiceAmount = 0;
 
@@ -396,6 +397,11 @@
                                                         }
                                                     }
                                                     $finalTotal =  $totalFrgnTRIWhse;
+                                                } elseif ($company === 'PBI') {
+                                                    foreach ($invoice->inv1_pbi as $item) {
+                                                            $pbi_invoice += $item->TotalFrgn;
+                                                    }
+                                                    $finalTotal =  $pbi_invoice;
                                                 } else {
                                                     $finalTotal = $invoice->DocTotalFC;
                                                 }
@@ -1364,6 +1370,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
 
     console.log(company);
     var totalFrgnTRIWhse = 0;
+    var pbi_invoice = 0;
     var finalTotal = 0;
     var originalInvoiceAmount = 0;
     if (company === 'WHI') {
@@ -1400,6 +1407,10 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
             }
             finalTotal = totalFrgnTRIWhse;
 
+    } else if (company === 'PBI') {
+        item.inv1_pbi.forEach(function (subItem) {
+                finalTotal += subItem.TotalFrgn;
+        });
     } else {
         finalTotal = item.DocTotalFC;
     }
