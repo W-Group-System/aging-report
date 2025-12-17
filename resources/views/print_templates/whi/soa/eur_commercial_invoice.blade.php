@@ -343,7 +343,7 @@
         <div class="container">
             <div class="line-two">
                 <span class="header-medium-text">Neele-VAT Logistics Customs Broker 1 BV</span>
-                <span class="header-small-text">Marco Plostraat 2-14, 3165 AL Rotterdam, The Netherlands</span>
+                <span class="header-small-text">Marco Polostraat 2-14, 3165 AL Rotterdam, The Netherlands</span>
                 <span class="header-small-text">NL007106774B02, acting as Fiscal Representative</span>
                 <span class="header-small-text">in the European Union for:</span>
             </div>
