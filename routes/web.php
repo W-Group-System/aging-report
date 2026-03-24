@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\CommercialInvoiceController;
+use App\Http\Controllers\UserController;
 
 Auth::routes();
 
@@ -169,4 +170,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
+    //User
+    Route::get('user', [UserController::class, 'index'])->name('user.index');
+    Route::post('save/user', [UserController::class, 'SaveUser'])->name('user.save');
+    Route::get('user/details', [UserController::class, 'GetUserDetails'])->name('user.details');
+    Route::post('user/delete', [UserController::class, 'DeleteUser'])->name('user.delete');
+
 });
