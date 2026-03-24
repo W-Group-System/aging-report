@@ -70,6 +70,9 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Email</th>
+                                            <th>Signature</th>
+                                            <th>GP Report</th>
+                                            <th>Print</th>
                                             <th>Date Created</th>
                                             <th>Action</th>
                                         </tr>                     
@@ -79,6 +82,9 @@
                                             <tr>
                                                 <td>{{$item->name}}</td>
                                                 <td>{{$item->email}}</td>
+                                                <td>{{$item->signature}}</td>
+                                                <td>{{$item->gp_report == "1"?"Yes":"No"}}</td>
+                                                <td>{{$item->print == "1"?"Yes":"No"}}</td>
                                                 <td>{{$item->created_at}}</td>
                                                 <td>
                                                     <button onclick="" data-id="{{ $item->id }}" type="button" class="btn btn-primary btn-outline edit"><i class="fa fa fa-pencil"></i></button>
@@ -176,12 +182,33 @@ $(document).ready(function() {
 
     $('#saveUserForm').submit(function (e) { 
         e.preventDefault();
-        var form_data = $(this).serializeArray();
+        let formData = new FormData();
+
+        let file = $('[name=signature]')[0].files[0];
+        let id = $('[name=id]').val();
+        let name = $('[name=name]').val();
+        let email = $('[name=email]').val();
+        let gpReport = $('[name=gpReport]').prop('checked') ? 1 : 0;
+        let print = $('[name=print]').prop('checked') ? 1 : 0;
+        let password = $('[name=password]').val();
+        let confPassword = $('[name=confPassword]').val();
+
+        formData.append('_token', "{{ csrf_token() }}" );
+        formData.append('file', file );
+        formData.append('id', id );
+        formData.append('name', name );
+        formData.append('email', email );
+        formData.append('gpReport', gpReport );
+        formData.append('print', print );
+        formData.append('password', password );
+        formData.append('confPassword',confPassword);
+        
         $.ajax({
             type: "POST",
             url: "{{ route('user.save') }}",
-            data: form_data,
-            // dataType: "JSON",
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function (response) {
                 $('#saveUserModal').modal('hide');
                 Swal.fire('Success', response.message, 'success').then(() => {

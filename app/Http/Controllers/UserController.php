@@ -49,13 +49,21 @@ class UserController extends Controller
                     $userData = User::where("email",$email)->first();
                     if (empty($userData)) {
                         if ($password == $confPassword) {
+                            $fileNameInit = null;
+                            if ($request->hasFile('file')) {
+                                $file = $request->file('file');
+                                $filename = $file->getClientOriginalName();
+                                $file->move(public_path('images/esign'), $filename);
+                                $fileNameInit = '/images/esign/'.$filename;
+                            }
                             $saveUser = User::create(
                                 [
                                     "name" => $name,
                                     "email" => $email,
                                     "password" => Hash::make($password),
                                     "print" => $print=="1"?"1":"0",
-                                    "gp_report" => $gpReport=="1"?"1":"0"
+                                    "gp_report" => $gpReport=="1"?"1":"0",
+                                    "signature" => $fileNameInit
                                 ]
                             );
 
@@ -76,12 +84,26 @@ class UserController extends Controller
                         ];
                     }
                 }else{
+                    
                     $userData = User::where("id",$id)->first();
                     $currentEmail = $userData->email;
                     
                     $validateEmailExist = User::where("email",$email)->where("id","<>",$id)->first();
 
                     if ($currentEmail == $email || empty($validateEmailExist)) {
+                        $fileNameInit = null;
+                        if ($request->hasFile('file')) {
+                            $oldFilePath = public_path($userData->signature);
+                            if (file_exists($oldFilePath)) {
+                                unlink($oldFilePath);
+                            }
+                            
+                            $file = $request->file('file');
+                            $filename = $file->getClientOriginalName();
+                            $file->move(public_path('images/esign'), $filename);
+                            $fileNameInit = '/images/esign/'.$filename;
+                        }
+
                         $saveUser = User::updateOrCreate(
                             ["id"=>$id],
                             [
@@ -89,7 +111,8 @@ class UserController extends Controller
                                 "email" => $email,
                                 // "password" => Hash::make($password),
                                 "print" => $print=="1"?"1":"0",
-                                "gp_report" => $gpReport=="1"?"1":"0"
+                                "gp_report" => $gpReport=="1"?"1":"0",
+                                "signature" => $fileNameInit
                             ]
                         );
                         if (isset($saveUser->id)) {
