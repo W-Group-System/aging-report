@@ -73,6 +73,7 @@
                                             <th>Signature</th>
                                             <th>GP Report</th>
                                             <th>Print</th>
+                                            <th>Users</th>
                                             <th>Date Created</th>
                                             <th>Action</th>
                                         </tr>                     
@@ -85,6 +86,7 @@
                                                 <td>{{$item->signature}}</td>
                                                 <td>{{$item->gp_report == "1"?"Yes":"No"}}</td>
                                                 <td>{{$item->print == "1"?"Yes":"No"}}</td>
+                                                <td>{{$item->users == "1"?"Yes":"No"}}</td>
                                                 <td>{{$item->created_at}}</td>
                                                 <td>
                                                     <button onclick="" data-id="{{ $item->id }}" type="button" class="btn btn-primary btn-outline edit"><i class="fa fa fa-pencil"></i></button>
@@ -146,6 +148,12 @@
                             Print
                         </label>
                     </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="users" value="1">
+                            Users
+                        </label>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Upload Signature</label>
@@ -190,6 +198,7 @@ $(document).ready(function() {
         let email = $('[name=email]').val();
         let gpReport = $('[name=gpReport]').prop('checked') ? 1 : 0;
         let print = $('[name=print]').prop('checked') ? 1 : 0;
+        let users = $('[name=users]').prop('checked') ? 1 : 0;
         let password = $('[name=password]').val();
         let confPassword = $('[name=confPassword]').val();
 
@@ -200,6 +209,7 @@ $(document).ready(function() {
         formData.append('email', email );
         formData.append('gpReport', gpReport );
         formData.append('print', print );
+        formData.append('users', users );
         formData.append('password', password );
         formData.append('confPassword',confPassword);
         
@@ -240,6 +250,7 @@ $(document).ready(function() {
                 $('[name=email]').val(response.data.email);
                 $('[name=gpReport]').prop('checked',response.data.gp_report == "1"?true:false)
                 $('[name=print]').prop('checked',response.data.print == "1"?true:false)
+                $('[name=users]').prop('checked',response.data.users == "1"?true:false)
                 $('[name=password]').prop('required',false);
                 $('[name=confPassword]').prop('required',false);
                 $('#saveUserModal').modal('show');

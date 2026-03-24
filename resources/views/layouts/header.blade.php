@@ -303,7 +303,7 @@
                     </ul>
                 </li>
                 @endif    
-                @if (auth()->user()->print == 1)
+                @if (auth()->user()->users == 1)
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="{{ route('user.index') }}">
                             Users

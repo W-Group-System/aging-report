@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -12,7 +13,11 @@ class UserController extends Controller
 {
     public function index(Request $request){
 
-        $serach = $request->search??"";
+        $validateAccessData = Auth::user()->users;
+        if ($validateAccessData == 0) {
+            return redirect()->back();
+        }
+
         $id = $request->id??"";
         $data = array();
 
@@ -43,6 +48,7 @@ class UserController extends Controller
             $password = $request->password??"";
             $confPassword = $request->confPassword??"";
             $gpReport = $request->gpReport??"";
+            $users = $request->users??"";
 
             if (!empty($name) && !empty($email)) {
                 if (empty($id)) {
@@ -63,6 +69,7 @@ class UserController extends Controller
                                     "password" => Hash::make($password),
                                     "print" => $print=="1"?"1":"0",
                                     "gp_report" => $gpReport=="1"?"1":"0",
+                                    "users" => $users=="1"?"1":"0",
                                     "signature" => $fileNameInit
                                 ]
                             );
@@ -112,6 +119,7 @@ class UserController extends Controller
                                 // "password" => Hash::make($password),
                                 "print" => $print=="1"?"1":"0",
                                 "gp_report" => $gpReport=="1"?"1":"0",
+                                "users" => $users=="1"?"1":"0",
                                 "signature" => $fileNameInit
                             ]
                         );
