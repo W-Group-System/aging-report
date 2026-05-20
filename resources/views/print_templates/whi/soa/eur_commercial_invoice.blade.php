@@ -268,7 +268,7 @@
             display: block; /* Block display to break to a new line */
         }
         .new-col {
-            display: table;                /* Set the outer div to behave like a table */
+            display: table;               
             width: 100%;                   /* Ensure it takes full width */
             margin: 10px 0;               /* Optional margin for spacing */
         }

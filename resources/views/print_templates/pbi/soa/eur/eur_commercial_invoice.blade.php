@@ -366,7 +366,7 @@
                 <span class="header-small-text">in the European Union for:</span> --}}
                 <span class="header-medium-text">Neele-VAT Customs Broker 1 BV</span>
                 <span class="header-small-text">Seattleweg 13 Rotterdam</span>
-                <span class="header-small-text">NNL007106774B01</span>
+                <span class="header-small-text">NL007106774B01</span>
                 <span class="header-small-text">Is acting as General Fiscal Representative for:</span>
             </div>
         </div>
