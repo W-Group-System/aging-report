@@ -39,10 +39,10 @@
             vertical-align: top;
         }
         .left {
-            width: 50%;
+            width: 38%;
         }
         .right {
-            width: 80%;
+            width: 100%;
             text-align: right; 
         }
         .header-container .right .line-one {
@@ -361,10 +361,14 @@
     <div class="right">
         <div class="container">
             <div class="line-two">
-                <span class="header-medium-text">Neele-VAT Logistics Customs Broker 1 BV</span>
+                {{-- <span class="header-medium-text">Neele-VAT Logistics Customs Broker 1 BV</span>
                 <span class="header-small-text">Marco Polostraat 2-14, 3165 AL Rotterdam, The Netherlands</span>
                 <span class="header-small-text">NL007106774B02, acting as Fiscal Representative</span>
-                <span class="header-small-text">in the European Union for:</span>
+                <span class="header-small-text">in the European Union for:</span> --}}
+                <span class="header-medium-text">Neele-VAT Customs Broker 1 BV</span>
+                <span class="header-small-text">Seattleweg 13 Rotterdam</span>
+                <span class="header-small-text">NL007106774B01</span>
+                <span class="header-small-text">Is acting as General Fiscal Representative for:</span>
             </div>
         </div>
 
@@ -372,7 +376,7 @@
             <strong>W Hydrocolloids, Inc.</strong> 
         </div>
         <div class="line-two">
-            <span class="header-small-text"><strong>Plant Address:</strong> Block 10 Lot 1 Phase 4 Mountview 1 Industrial Complex, Bancal,  4116 Carmona, Cavite, Philippines</span>
+            <span class="header-small-text"><strong>Plant Address:</strong> Block 10 Lot 1 Phase 4 Mountview 1 Industrial Complex, Bancal, 4116 Carmona, Cavite, Philippines</span>
             <span class="header-small-text"><strong>Admin Office:</strong> 26/F. W Fifth Ave. Bldg. 3051 5th Ave. cor. 32nd St., Bonifacio Global City, Taguig City, 1634 Philippines</span>
             <span class="header-small-text"><strong>Phone:</strong> (+632) 8856.3838 | Fax: (+632) 8856 1033</span>
             <span class="header-small-text">sales@rico.com.ph | www.rico.com.ph </span>
