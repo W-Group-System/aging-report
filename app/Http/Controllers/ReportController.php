@@ -65,11 +65,21 @@ class ReportController extends Controller
             }
             $invoices1 = $query1->get();
 
-            $matchingDocEntries = INV1::select('DocEntry')
-            ->whereIn('WhsCode', ['TRI Whse', 'VAT'])
+            // $matchingDocEntries = INV1::select('DocEntry')
+            // ->whereIn('WhsCode', ['TRI Whse', 'VAT'])
+            // ->groupBy('DocEntry')
+            // ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
+            // ->get();
+            $matchingDocEntries = INV1::whereIn('WhsCode', ['TRI Whse', 'VAT'])
             ->groupBy('DocEntry')
-            ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
-            ->get();
+            ->havingRaw("
+                COUNT(DISTINCT WhsCode) > 1
+                OR (
+                    COUNT(DISTINCT WhsCode) = 1
+                    AND MAX(WhsCode) <> 'TRI Whse'
+                )
+            ")
+            ->pluck('DocEntry');
 
             $query2 = OINV::select([
                 'DocNum',
