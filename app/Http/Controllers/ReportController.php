@@ -25,7 +25,7 @@ class ReportController extends Controller
         if($request->company == "WHI") {
             $last_invoices = OINV::where('DocNum', 10338)->get();
 
-            $query1 = OINV::select([
+            $baseQuery = OINV::select([
                 'DocNum',
                 'CardName',
                 'U_invNo',
@@ -45,24 +45,37 @@ class ReportController extends Controller
                 'DocTotal',
                 'PaidToDate',
                 'DocRate',
-            ])
+            ])->with([
+                'payments',
+                'terms',
+                'manager',
+                'remark',
+                'inv1.delivery'
+            ]);
+
+            $query1 = (clone $baseQuery)
             ->whereDoesntHave('warehouse', function($query) {
                 $query->where('WhsCode', 'TRI Whse');
             })
             ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
             ->where('CardName', '!=', 'Mariel Tan')
-            ->where('NumAtCard', '!=', 'WHI20-312L CCC')
-            ->where('NumAtCard', '!=', 'WHI20-280L CCC')
-            ->where('NumAtCard', '!=', 'WHI20-281L CCC-Mandaue')
-            ->where('NumAtCard', '!=', 'WHI20-311L CCC-Mandaue')
+            ->whereNotIn('NumAtCard', [
+                'WHI20-312L CCC',
+                'WHI20-280L CCC',
+                'WHI20-281L CCC-Mandaue',
+                'WHI20-311L CCC-Mandaue',
+            ])
             ->where('CardCode', 'not like', 'LR-%')
             ->where('CardCode', 'not like', 'WTT-%')
             ->where('DocStatus', 'O');
            
 
-            if ($request->filled('end_date')) {
-                $query1->where('DocDate', '<=', $request->end_date);
-            }
+            // if ($request->filled('end_date')) {
+            //     $query1->where('DocDate', '<=', $request->end_date);
+            // }
+            $query1->when($request->filled('end_date'), function ($q) use ($request) {
+                $q->where('DocDate', '<=', $request->end_date);
+            });
             $invoices1 = $query1->get();
 
             // $matchingDocEntries = INV1::select('DocEntry')
@@ -81,28 +94,7 @@ class ReportController extends Controller
             ")
             ->pluck('DocEntry');
 
-            $query2 = OINV::select([
-                'DocNum',
-                'CardName',
-                'U_invNo',
-                'NumAtCard',
-                'DocCur',
-                'GroupNum',
-                'SlpCode',
-                'DocEntry',
-                'CardCode',
-                'DocStatus',
-                'DocDate',
-                'U_DueDateAR',
-                'PaidSumFc',
-                'DpmAmntFC',
-                'DocType',
-                'DocDueDate',
-                'DocTotal',
-                'PaidToDate',
-                'DocRate',
-            ])
-            ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+            $query2 = (clone $baseQuery)
             ->whereIn('DocEntry', $matchingDocEntries)
             ->where('DocStatus', 'O')
             ->get();
