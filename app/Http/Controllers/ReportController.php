@@ -93,8 +93,11 @@ class ReportController extends Controller
         if ($request->company == "WHI") {
             $last_invoices = OINV::where('DocNum', 10338)->get();
 
-            $query1 = OINV::whereDoesntHave('warehouse', function ($query) {
-                    $query->where('WhsCode', 'TRI Whse');
+            $query1 = OINV::whereNotExists(function ($query) {
+                    $query->select(\DB::raw(1))
+                        ->from('INV1')
+                        ->whereColumn('INV1.DocEntry', 'OINV.DocEntry')
+                        ->where('INV1.WhsCode', 'TRI Whse');
                 })
                 ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
                 ->where('CardName', '!=', 'Mariel Tan')
@@ -111,11 +114,8 @@ class ReportController extends Controller
             if ($request->filled('end_date')) {
                 $query1->where('DocDate', '<=', $request->end_date);
             }
-            $t0 = microtime(true);
             $invoices1 = $query1->get();
-            \Log::info('query1', ['sec' => microtime(true) - $t0]);
 
-            $t0 = microtime(true);
             $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
                 ->whereIn('DocEntry', function ($sub) {
                     $sub->select('DocEntry')
@@ -126,7 +126,6 @@ class ReportController extends Controller
                 })
                 ->where('DocStatus', 'O')
                 ->get();
-                \Log::info('query2', ['sec' => microtime(true) - $t0]);
 
             $invoices1DocNums = $invoices1->pluck('DocNum')->flip();
 
