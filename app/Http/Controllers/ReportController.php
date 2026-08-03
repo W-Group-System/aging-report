@@ -99,7 +99,8 @@ class ReportController extends Controller
                     ->whereColumn('INV1.DocEntry', 'OINV.DocEntry')
                     ->where('INV1.WhsCode', 'TRI Whse');
             })
-            ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+            // ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+            ->with('terms', 'manager', 'remark', 'inv1.delivery', 'location.ocrg') 
             ->where('CardName', '!=', 'Mariel Tan')
             ->whereNotIn('NumAtCard', [
                 'WHI20-312L CCC',
