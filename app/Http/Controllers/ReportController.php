@@ -282,7 +282,18 @@ class ReportController extends Controller
 
         // dd($invoices->first());
 
-        $invoicesForJs = $invoices->map(function ($invoice) {
+        $invoiceLines = collect();
+
+        $invoicesForJs = $invoices->map(function ($invoice) use ($request) {
+
+            if ($request->company == 'PBI') {
+            $invoiceLines = collect($invoice->inv1_pbi);
+            } elseif ($request->company == 'CCC') {
+                $invoiceLines = collect($invoice->inv1); // or inv1_ccc if you create one
+            } else {
+                $invoiceLines = collect($invoice->inv1);
+            }
+            
             return [
                 'DocNum' => $invoice->DocNum,
                 'CardName' => $invoice->CardName,
@@ -312,7 +323,7 @@ class ReportController extends Controller
                     'created_at' => $invoice->remark->created_at,
                     'updated_at' => $invoice->remark->updated_at,
                 ] : null,
-                'inv1' => $invoice->inv1->map(function ($item) {
+                'inv1' => $invoiceLines->map(function ($item) {
                     return [
                         'WhsCode' => $item->WhsCode,
                         'TotalFrgn' => $item->TotalFrgn,

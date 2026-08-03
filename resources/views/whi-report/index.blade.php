@@ -1408,7 +1408,7 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
             finalTotal = totalFrgnTRIWhse;
 
     } else if (company === 'PBI') {
-        item.inv1_pbi.forEach(function (subItem) {
+        item.inv1.forEach(function (subItem) {
                 finalTotal += subItem.TotalFrgn;
         });
     } else {
