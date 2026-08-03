@@ -93,27 +93,52 @@ class ReportController extends Controller
             ")
             ->pluck('DocEntry');
 
+            // $query2 = (clone $baseQuery)
+            // ->whereIn('DocEntry', $matchingDocEntries)
+            // ->where('DocStatus', 'O')
+            // ->get();
+
             $query2 = (clone $baseQuery)
-            ->whereIn('DocEntry', $matchingDocEntries)
+            ->whereIn('DocEntry', function ($q) {
+                $q->select('DocEntry')
+                    ->from('INV1')
+                    ->whereIn('WhsCode', ['TRI Whse', 'VAT'])
+                    ->groupBy('DocEntry')
+                    ->havingRaw("
+                        COUNT(DISTINCT WhsCode) > 1
+                        OR (
+                            COUNT(DISTINCT WhsCode) = 1
+                            AND MAX(WhsCode) <> 'TRI Whse'
+                        )
+                    ");
+            })
             ->where('DocStatus', 'O')
             ->get();
 
             // $invoices = $invoices1->sortBy('U_DueDateAR');
 
-            $invoices = collect();
-            foreach ($invoices1 as $invoice) {
-                $invoices->push($invoice);
+            // $invoices = collect();
+            // foreach ($invoices1 as $invoice) {
+            //     $invoices->push($invoice);
+            // }
+            $invoices = $invoices1->keyBy('DocNum');
+
+            // foreach ($query2 as $invoice) {
+            //     if (!$invoices1->contains('DocNum', $invoice->DocNum)) {
+            //         $invoices->push($invoice);
+            //     }
+            // }
+            // foreach ($last_invoices as $last_invoice) {
+            //     if (!$invoices1->contains('DocNum', $last_invoice->DocNum)) {
+            //         $invoices->push($last_invoice);
+            //     }
+            // }
+            foreach ($query2 as $invoice) {
+                $invoices->put($invoice->DocNum, $invoice);
             }
 
-            foreach ($query2 as $invoice) {
-                if (!$invoices1->contains('DocNum', $invoice->DocNum)) {
-                    $invoices->push($invoice);
-                }
-            }
-            foreach ($last_invoices as $last_invoice) {
-                if (!$invoices1->contains('DocNum', $last_invoice->DocNum)) {
-                    $invoices->push($last_invoice);
-                }
+            foreach ($last_invoices as $invoice) {
+                $invoices->put($invoice->DocNum, $invoice);
             }
 
             $invoices = $invoices->map(function ($invoice) use ($request) {
@@ -175,19 +200,36 @@ class ReportController extends Controller
                 }
             }
 
-            $invoices = $invoices->map(function ($invoice) use ($request) {
-                $end_date = !empty($request->end_date) ? strtotime($request->end_date) : time();
-                $due_date = !empty($invoice->U_DueDateAR) ? strtotime($invoice->U_DueDateAR) : null;
+            // $invoices = $invoices->map(function ($invoice) use ($request) {
+            //     $end_date = !empty($request->end_date) ? strtotime($request->end_date) : time();
+            //     $due_date = !empty($invoice->U_DueDateAR) ? strtotime($invoice->U_DueDateAR) : null;
         
-                if ($due_date !== null) {
-                    $datediff = $end_date - $due_date;
-                    $days_late = floor($datediff / (60 * 60 * 24)); 
-                } else {
-                    $days_late = null; 
-                }
+            //     if ($due_date !== null) {
+            //         $datediff = $end_date - $due_date;
+            //         $days_late = floor($datediff / (60 * 60 * 24)); 
+            //     } else {
+            //         $days_late = null; 
+            //     }
+            //     $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
+            //     $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
+            //     $invoice->days_late = $days_late; 
+            //     return $invoice;
+            // });
+            $endDate = strtotime($request->end_date ?? now());
+            $invoices = $invoices->map(function ($invoice) use ($endDate) {
+
+                $dueDate = $invoice->U_DueDateAR
+                    ? strtotime($invoice->U_DueDateAR)
+                    : null;
+
+                $invoice->days_late = $dueDate
+                    ? floor(($endDate - $dueDate) / 86400)
+                    : null;
+
                 $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
-                $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
-                $invoice->days_late = $days_late; 
+
+                $invoice->baseline_date = optional($deliveryLine->delivery)->U_BaseDate;
+
                 return $invoice;
             });
             $invoices = $invoices->sortByDesc('days_late')->values();
