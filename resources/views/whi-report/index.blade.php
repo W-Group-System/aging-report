@@ -1172,7 +1172,7 @@ var end_date = endDateParam ? new Date(endDateParam) : new Date();
 // } else {
 //     end_date = Date.now(); 
 // }
-   var invoicesData = <?php echo json_encode($invoices); ?> ;
+   var invoicesData = {!! json_encode($invoicesForJs) !!};
    console.log(invoicesData);
 function openModal(filterColumn) {
     console.log(filterColumn);
