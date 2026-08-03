@@ -22,72 +22,138 @@ class ReportController extends Controller
         
             $aging = Aging::where('company',$request->company)->whereYear('date',date('Y',strtotime($previous_month)))->whereMonth('date',date('m',strtotime($previous_month)))->orderBy('date','desc')->first();
         }
-        if($request->company == "WHI") {
+        // if($request->company == "WHI") {
+        //     $last_invoices = OINV::where('DocNum', 10338)->get();
+
+        //     $query1 = OINV::whereDoesntHave('warehouse', function($query) {
+        //         $query->where('WhsCode', 'TRI Whse');
+        //     })
+        //     ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+        //     ->where('CardName', '!=', 'Mariel Tan')
+        //     ->where('NumAtCard', '!=', 'WHI20-312L CCC')
+        //     ->where('NumAtCard', '!=', 'WHI20-280L CCC')
+        //     ->where('NumAtCard', '!=', 'WHI20-281L CCC-Mandaue')
+        //     ->where('NumAtCard', '!=', 'WHI20-311L CCC-Mandaue')
+        //     ->where('CardCode', 'not like', 'LR-%')
+        //     ->where('CardCode', 'not like', 'WTT-%')
+        //     ->where('DocStatus', 'O');
+           
+
+        //     if ($request->filled('end_date')) {
+        //         $query1->where('DocDate', '<=', $request->end_date);
+        //     }
+        //     $invoices1 = $query1->get();
+
+        //     $matchingDocEntries = INV1::select('DocEntry')
+        //     ->whereIn('WhsCode', ['TRI Whse', 'VAT'])
+        //     ->groupBy('DocEntry')
+        //     ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
+        //     ->get();
+
+        //     $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+        //     ->whereIn('DocEntry', $matchingDocEntries)
+        //     ->where('DocStatus', 'O')
+        //     ->get();
+
+        //     // $invoices = $invoices1->sortBy('U_DueDateAR');
+
+        //     $invoices = collect();
+        //     foreach ($invoices1 as $invoice) {
+        //         $invoices->push($invoice);
+        //     }
+
+        //     foreach ($query2 as $invoice) {
+        //         if (!$invoices1->contains('DocNum', $invoice->DocNum)) {
+        //             $invoices->push($invoice);
+        //         }
+        //     }
+        //     foreach ($last_invoices as $last_invoice) {
+        //         if (!$invoices1->contains('DocNum', $last_invoice->DocNum)) {
+        //             $invoices->push($last_invoice);
+        //         }
+        //     }
+
+        //     $invoices = $invoices->map(function ($invoice) use ($request) {
+        //         $end_date = !empty($request->end_date) ? strtotime($request->end_date) : time();
+        //         $due_date = !empty($invoice->U_DueDateAR) ? strtotime($invoice->U_DueDateAR) : null;
+        
+        //         if ($due_date !== null) {
+        //             $datediff = $end_date - $due_date;
+        //             $days_late = floor($datediff / (60 * 60 * 24)); 
+        //         } else {
+        //             $days_late = null; 
+        //         }
+        //         $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
+        //         $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
+        //         $invoice->days_late = $days_late; 
+        //         return $invoice;
+        //     });
+        //     $invoices = $invoices->sortByDesc('days_late')->values();
+        // }
+        if ($request->company == "WHI") {
             $last_invoices = OINV::where('DocNum', 10338)->get();
 
-            $query1 = OINV::whereDoesntHave('warehouse', function($query) {
-                $query->where('WhsCode', 'TRI Whse');
-            })
-            ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
-            ->where('CardName', '!=', 'Mariel Tan')
-            ->where('NumAtCard', '!=', 'WHI20-312L CCC')
-            ->where('NumAtCard', '!=', 'WHI20-280L CCC')
-            ->where('NumAtCard', '!=', 'WHI20-281L CCC-Mandaue')
-            ->where('NumAtCard', '!=', 'WHI20-311L CCC-Mandaue')
-            ->where('CardCode', 'not like', 'LR-%')
-            ->where('CardCode', 'not like', 'WTT-%')
-            ->where('DocStatus', 'O');
-           
+            $query1 = OINV::whereDoesntHave('warehouse', function ($query) {
+                    $query->where('WhsCode', 'TRI Whse');
+                })
+                ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+                ->where('CardName', '!=', 'Mariel Tan')
+                ->whereNotIn('NumAtCard', [
+                    'WHI20-312L CCC',
+                    'WHI20-280L CCC',
+                    'WHI20-281L CCC-Mandaue',
+                    'WHI20-311L CCC-Mandaue',
+                ])
+                ->where('CardCode', 'not like', 'LR-%')
+                ->where('CardCode', 'not like', 'WTT-%')
+                ->where('DocStatus', 'O');
 
             if ($request->filled('end_date')) {
                 $query1->where('DocDate', '<=', $request->end_date);
             }
             $invoices1 = $query1->get();
 
-            $matchingDocEntries = INV1::select('DocEntry')
-            ->whereIn('WhsCode', ['TRI Whse', 'VAT'])
-            ->groupBy('DocEntry')
-            ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
-            ->get();
-
             $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
-            ->whereIn('DocEntry', $matchingDocEntries)
-            ->where('DocStatus', 'O')
-            ->get();
+                ->whereIn('DocEntry', function ($sub) {
+                    $sub->select('DocEntry')
+                        ->from('INV1') 
+                        ->whereIn('WhsCode', ['TRI Whse', 'VAT'])
+                        ->groupBy('DocEntry')
+                        ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')');
+                })
+                ->where('DocStatus', 'O')
+                ->get();
 
-            // $invoices = $invoices1->sortBy('U_DueDateAR');
+            $invoices1DocNums = $invoices1->pluck('DocNum')->flip();
 
-            $invoices = collect();
-            foreach ($invoices1 as $invoice) {
-                $invoices->push($invoice);
-            }
+            $invoices = collect($invoices1);
 
             foreach ($query2 as $invoice) {
-                if (!$invoices1->contains('DocNum', $invoice->DocNum)) {
+                if (!$invoices1DocNums->has($invoice->DocNum)) {
                     $invoices->push($invoice);
                 }
             }
             foreach ($last_invoices as $last_invoice) {
-                if (!$invoices1->contains('DocNum', $last_invoice->DocNum)) {
+                if (!$invoices1DocNums->has($last_invoice->DocNum)) {
                     $invoices->push($last_invoice);
                 }
             }
 
-            $invoices = $invoices->map(function ($invoice) use ($request) {
-                $end_date = !empty($request->end_date) ? strtotime($request->end_date) : time();
+            $end_date = !empty($request->end_date) ? strtotime($request->end_date) : time();
+
+            $invoices = $invoices->map(function ($invoice) use ($end_date) {
                 $due_date = !empty($invoice->U_DueDateAR) ? strtotime($invoice->U_DueDateAR) : null;
-        
-                if ($due_date !== null) {
-                    $datediff = $end_date - $due_date;
-                    $days_late = floor($datediff / (60 * 60 * 24)); 
-                } else {
-                    $days_late = null; 
-                }
+
+                $days_late = $due_date !== null
+                    ? floor(($end_date - $due_date) / (60 * 60 * 24))
+                    : null;
+
                 $deliveryLine = $invoice->inv1->firstWhere('BaseType', 15);
                 $invoice->baseline_date = optional(optional($deliveryLine)->delivery)->U_BaseDate;
-                $invoice->days_late = $days_late; 
+                $invoice->days_late = $days_late;
                 return $invoice;
             });
+
             $invoices = $invoices->sortByDesc('days_late')->values();
         }
         elseif($request->company == "Triangle Shipments") {
