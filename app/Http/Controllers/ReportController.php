@@ -12,8 +12,8 @@ use Illuminate\Http\Request;
 class ReportController extends Controller
 {
     public function index(Request $request) {
-        $invoices = [];
-        $last_invoices = [];
+        $invoices = collect();
+        $last_invoices = collect();
         $aging = [];
         $previous_month = date('Y-m-d', strtotime(date('Y-m')." -1 month"));
         
