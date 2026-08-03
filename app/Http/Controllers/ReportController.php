@@ -111,8 +111,11 @@ class ReportController extends Controller
             if ($request->filled('end_date')) {
                 $query1->where('DocDate', '<=', $request->end_date);
             }
+            $t0 = microtime(true);
             $invoices1 = $query1->get();
+            \Log::info('query1', ['sec' => microtime(true) - $t0]);
 
+            $t0 = microtime(true);
             $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
                 ->whereIn('DocEntry', function ($sub) {
                     $sub->select('DocEntry')
@@ -123,6 +126,7 @@ class ReportController extends Controller
                 })
                 ->where('DocStatus', 'O')
                 ->get();
+                \Log::info('query2', ['sec' => microtime(true) - $t0]);
 
             $invoices1DocNums = $invoices1->pluck('DocNum')->flip();
 
