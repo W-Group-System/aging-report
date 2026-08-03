@@ -25,28 +25,7 @@ class ReportController extends Controller
         if($request->company == "WHI") {
             $last_invoices = OINV::where('DocNum', 10338)->get();
 
-            $query1 = OINV::select([
-                'DocNum',
-                'CardName',
-                'U_invNo',
-                'NumAtCard',
-                'DocCur',
-                'GroupNum',
-                'SlpCode',
-                'DocEntry',
-                'CardCode',
-                'DocStatus',
-                'DocDate',
-                'U_DueDateAR',
-                'PaidSumFc',
-                'DpmAmntFC',
-                'DocType',
-                'DocDueDate',
-                'DocTotal',
-                'PaidToDate',
-                'DocRate',
-            ])
-            ->whereDoesntHave('warehouse', function($query) {
+            $query1 = OINV::whereDoesntHave('warehouse', function($query) {
                 $query->where('WhsCode', 'TRI Whse');
             })
             ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
@@ -71,28 +50,7 @@ class ReportController extends Controller
             ->havingRaw('COUNT(DISTINCT WhsCode) > 1 OR (COUNT(DISTINCT WhsCode) = 1 AND MAX(WhsCode) <> \'TRI Whse\')')
             ->get();
 
-            $query2 = OINV::select([
-                'DocNum',
-                'CardName',
-                'U_invNo',
-                'NumAtCard',
-                'DocCur',
-                'GroupNum',
-                'SlpCode',
-                'DocEntry',
-                'CardCode',
-                'DocStatus',
-                'DocDate',
-                'U_DueDateAR',
-                'PaidSumFc',
-                'DpmAmntFC',
-                'DocType',
-                'DocDueDate',
-                'DocTotal',
-                'PaidToDate',
-                'DocRate',
-            ])
-            ->with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
+            $query2 = OINV::with('payments', 'terms', 'manager', 'remark', 'inv1.delivery')
             ->whereIn('DocEntry', $matchingDocEntries)
             ->where('DocStatus', 'O')
             ->get();
