@@ -13,7 +13,8 @@ class ReportController extends Controller
 {
     public function index(Request $request) {
         $invoices = collect();
-        $last_invoices = collect();
+        // remove last invoices
+        // $last_invoices = collect(); 
         $aging = [];
         $previous_month = date('Y-m-d', strtotime(date('Y-m')." -1 month"));
         
@@ -91,7 +92,8 @@ class ReportController extends Controller
         //     $invoices = $invoices->sortByDesc('days_late')->values();
         // }
         if ($request->company == "WHI") {
-            $last_invoices = OINV::where('DocNum', 10338)->get();
+            // remove last invoices
+            // $last_invoices = OINV::where('DocNum', 10338)->get();
 
             $query1 = OINV::whereNotExists(function ($query) {
                     $query->select(\DB::raw(1))
@@ -137,11 +139,12 @@ class ReportController extends Controller
                     $invoices->push($invoice);
                 }
             }
-            foreach ($last_invoices as $last_invoice) {
-                if (!$invoices1DocNums->has($last_invoice->DocNum)) {
-                    $invoices->push($last_invoice);
-                }
-            }
+            // remove last invoices
+            // foreach ($last_invoices as $last_invoice) {
+            //     if (!$invoices1DocNums->has($last_invoice->DocNum)) {
+            //         $invoices->push($last_invoice);
+            //     }
+            // }
 
             $end_date = !empty($request->end_date) ? strtotime($request->end_date) : time();
 
@@ -341,7 +344,7 @@ class ReportController extends Controller
                 'company' => $request->company,
                 'aging' => $aging,
                 'previous_month' => $previous_month,
-                'last_invoices' => $last_invoices,
+                // 'last_invoices' => $last_invoices,
                 // 'matchingDocEntries' => $matchingDocEntries,
             )
         ); 
