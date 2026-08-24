@@ -1401,7 +1401,8 @@ function renderModalContent(data, filterColumn, status, currency, type, company)
         if (item.inv1 && Array.isArray(item.inv1)) {
                 item.inv1.forEach(function (subItem) {
                     if (subItem.WhsCode === 'TRI Whse') {
-                        totalFrgnTRIWhse += subItem.TotalFrgn;
+                        // totalFrgnTRIWhse += subItem.TotalFrgn;
+                         totalFrgnTRIWhse += parseFloat(subItem.TotalFrgn) || 0;
                     }
                 });
             }
