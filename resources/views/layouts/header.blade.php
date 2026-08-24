@@ -339,7 +339,7 @@
                                     </div>
                                     <div class="notification-content">
                                         <div>
-                                            <span class="small text-muted">{{ $notification->userInfo->email }}</span>
+                                            <span class="small text-muted">{{ optional($notification->userInfo)->email }}</span>
                                             <span class="small text-muted">
                                                 @if ($notification->action == "Add")
                                                     Added Remarks For
