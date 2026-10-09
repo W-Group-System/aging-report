@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-md-3">
                     <label>Terms / Due Date</label>
-                    <input name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}">
+                    <input name="InvoiceDueDate" class="form-control" type="date" value="{{ optional($detail->asNew)->InvoiceDueDate ? \Carbon\Carbon::parse(optional($detail->asNew)->InvoiceDueDate)->format('Y-m-d') : '' }}" readonly>
                 </div>
                 <div class="col-md-4">
                     <label>Payment Terms</label>
@@ -148,15 +148,15 @@
                 </div>
                 <div class="col-md-3">
                     <label>Quantity</label>
-                    <input class="form-control" name="Quantity[]" type="text" value="{{ number_format($product->Quantity, 2) }}" >
+                    <input class="form-control" name="Quantity[]" type="text" value="{{ number_format($product->Quantity, 2) }}" readonly>
                 </div>
                 <div class="col-md-3">
                     <label>Unit Price</label>
-                    <input class="form-control" name="UnitPrice[]" type="text" value="{{ number_format($product->UnitPrice, 2) }}" >
+                    <input class="form-control" name="UnitPrice[]" type="text" value="{{ number_format($product->UnitPrice, 2) }}" readonly>
                 </div>
                 <div class="col-md-3">
                     <label>Amount</label>
-                    <input class="form-control" name="Amount[]" type="text" value="{{ number_format($product->Amount, 2) }}" >
+                    <input class="form-control" name="Amount[]" type="text" value="{{ number_format($product->Amount, 2) }}" readonly>
                 </div>
                 @endforeach
             </div>   

@@ -147,15 +147,15 @@
                 </div>
                 <div class="col-md-3">
                     <label>Quantity</label>
-                    <input class="form-control" name="Quantity[]" type="text" value="{{ $product->U_printUOM == 'lbs' ? number_format($product->Quantity * 2.2, 2) : number_format($product->Quantity, 2) }}" >
+                    <input class="form-control" name="Quantity[]" type="text" value="{{ $product->U_printUOM == 'lbs' ? number_format($product->Quantity * 2.2, 2) : number_format($product->Quantity, 2) }}" readonly>
                 </div>
                 <div class="col-md-3">
                     <label>Unit Price</label>
-                    <input class="form-control" name="UnitPrice[]" type="text" value="{{ $product->U_printUOM == 'lbs' ? number_format($product->Price / 2.2, 2) : number_format($product->Price, 2) }}" >
+                    <input class="form-control" name="UnitPrice[]" type="text" value="{{ $product->U_printUOM == 'lbs' ? number_format($product->Price / 2.2, 2) : number_format($product->Price, 2) }}" readonly>
                 </div>
                 <div class="col-md-3">
                     <label>Amount</label>
-                    <input class="form-control" name="Amount[]" type="text" value="{{ number_format(($product->Quantity) * ($product->Price), 2) }}" >
+                    <input class="form-control" name="Amount[]" type="text" value="{{ number_format(($product->Quantity) * ($product->Price), 2) }}" readonly>
                 </div>
                 @endforeach
             </div>   
